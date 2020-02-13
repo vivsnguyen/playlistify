@@ -27,7 +27,7 @@ class Artist(db.Model):
 
 
 class Song(db.Model):
-    """Songs from setslists of chosen artist."""
+    """Songs from setlists of chosen artist."""
 
     __tablename__ = "songs"
 
