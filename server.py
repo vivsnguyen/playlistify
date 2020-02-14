@@ -9,6 +9,8 @@ from model import Artist, Song, Playlist, PlaylistSong, connect_to_db, db
 
 from setlist_api import *
 
+import os
+
 
 app = Flask(__name__)
 
@@ -24,15 +26,18 @@ app.jinja_env.undefined = StrictUndefined
 @app.route('/')
 def index():
     """Homepage."""
+
     return render_template("homepage.html")
 
 @app.route('/create-playlist', methods=["GET"])
 def show_create_playlist_form():
+    """Shows create playlist page."""
 
     return render_template("create-playlist.html")
 
 @app.route('/create-playlist', methods=["POST"])
 def create_playlist():
+    """Creates playlist in db."""
 
     playlist_title = request.form.get('playlist_title')
     create_playlist_in_db(playlist_title)
@@ -43,7 +48,7 @@ def create_playlist():
 
 @app.route('/display-playlists')
 def display_playlists():
-    """Show playlists."""
+    """Show playlists on page."""
     if Playlist.query.first():
     #check if playlists have a query
         playlists = Playlist.query.all()
@@ -55,11 +60,14 @@ def display_playlists():
 
 @app.route('/add-to-playlist', methods=["GET"])
 def show_add_to_playlist_form():
+    """Shows page to add to playlists."""
 
     return render_template("add-to-playlist.html")
 
 @app.route('/add-to-playlist', methods=["POST"])
 def add_to_playlist():
+    """Creates or updates playlist with songs."""
+
     playlist_title = request.form.get('playlist_title')
     artist_name = request.form.get('artist_name')
 
@@ -71,6 +79,25 @@ def add_to_playlist():
 
     flash('Songs added successfully.')
     return redirect('/')
+
+@app.route('/clear-playlists', methods=["GET"])
+def show_clear_playlist_form():
+    """Shows show_clear_playlist_form playlist page."""
+
+    return render_template("clear-playlists.html")
+
+@app.route('/clear-playlists', methods=["POST"])
+def clear_playlist():
+    """Deletes playlists from db."""
+    
+    os.system("dropdb playlist-creator")
+    os.system("createdb playlist-creator")
+
+    db.create_all()
+
+    flash('All playlists deleted.')
+    return redirect('/')
+
 
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the
