@@ -1,4 +1,4 @@
-"""Playlist generator."""
+"""Playlist creator."""
 
 from jinja2 import StrictUndefined
 

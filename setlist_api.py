@@ -3,7 +3,8 @@ import requests
 from sqlalchemy import func
 from model import Artist, Song, Playlist, PlaylistSong
 from model import connect_to_db, db
-from server import app
+import server
+# from server import app
 
 header_info = {'Accept' : 'application/json', 'x-api-key' : 'nrpEosh7l8AsjeWaokp9PZ4T2LYtkb2ctTS2'}
 
@@ -85,7 +86,7 @@ def add_songs_to_playlist(artist,playlist):
     return
 
 if __name__ == "__main__":
-    connect_to_db(app)
+    connect_to_db(server.app)
 
     # In case tables haven't been created, create them
     db.create_all()
