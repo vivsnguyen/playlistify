@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block content %}
+{% block title %} My playlists {% endblock %}
+
+<h2>My playlists</h2>
+
+  <ul>
+    {% if playlists %}
+        {% for playlist in playlists %}
+            <h3> {{ playlist.playlist_title }} </h3>
+            {% for song in playlist.songs %}
+              <li>
+                {{ song.song_name }}
+                {{ song.artist.artist_name }}
+                </a>
+              </li>
+            {% endfor %}
+        {% endfor %}
+    {% endif %}
+  </ul>
+
+{% endblock %}

@@ -7,6 +7,8 @@ from flask_debugtoolbar import DebugToolbarExtension
 
 from model import Artist, Song, Playlist, PlaylistSong, connect_to_db, db
 
+from setlist_api import *
+
 
 app = Flask(__name__)
 
@@ -23,6 +25,52 @@ app.jinja_env.undefined = StrictUndefined
 def index():
     """Homepage."""
     return render_template("homepage.html")
+
+@app.route('/create-playlist', methods=["GET"])
+def show_create_playlist_form():
+
+    return render_template("create-playlist.html")
+
+@app.route('/create-playlist', methods=["POST"])
+def create_playlist():
+
+    playlist_title = request.form.get('playlist_title')
+    create_playlist_in_db(playlist_title)
+
+    flash(f'Playlist {playlist_title} created successfully.')
+    return redirect('/')
+
+
+@app.route('/display-playlists')
+def display_playlists():
+    """Show playlists."""
+    if Playlist.query.first():
+    #check if playlists have a query
+        playlists = Playlist.query.all()
+        return render_template("display-playlists.html", playlists=playlists)
+    else:
+        flash('No playlists to display.')
+        return redirect('/')
+
+
+@app.route('/add-to-playlist', methods=["GET"])
+def show_add_to_playlist_form():
+
+    return render_template("add-to-playlist.html")
+
+@app.route('/add-to-playlist', methods=["POST"])
+def add_to_playlist():
+    playlist_title = request.form.get('playlist_title')
+    artist_name = request.form.get('artist_name')
+
+    artist = add_artist_to_db(artist_name)
+    setlists = load_setlists_from_artist(artist)
+    add_songs_to_db(artist, setlists)
+    playlist = create_playlist_in_db(playlist_title)
+    add_songs_to_playlist(artist,playlist)
+
+    flash('Songs added successfully.')
+    return redirect('/')
 
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the

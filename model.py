@@ -18,7 +18,7 @@ class Artist(db.Model):
     __tablename__ = "artists"
 
     artist_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    artist_name = db.Column(db.String(80), nullable=True)
+    artist_name = db.Column(db.String(100), nullable=True)
 
     def __repr__(self):
         """Provide helpful representation when printed."""
@@ -32,7 +32,7 @@ class Song(db.Model):
     __tablename__ = "songs"
 
     song_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    song_name = db.Column(db.String(80), nullable=True)
+    song_name = db.Column(db.String(200), nullable=True)
     primary_artist = db.Column(db.Integer, db.ForeignKey('artists.artist_id'))
 
     artist = db.relationship("Artist", backref="songs")

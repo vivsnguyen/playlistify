@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block content %}
+{% block title %} Add to playlist {% endblock %}
+
+<form action = '/add-to-playlist' method="POST">
+    <label>Playlist title</label><input type="text" name = "playlist_title">
+
+    <label>Artist name</label><input type="text" name = "artist_name">
+
+
+    <input type = "submit">
+
+{% endblock %}

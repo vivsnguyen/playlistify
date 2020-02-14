@@ -19,6 +19,7 @@ def add_artist_to_db(artist_name):
 
     return artist
 
+
 def load_setlists_from_artist(artist): #could take in artist ID or artist object
     """Create a list of songs by chosen artist from a setlist."""
     #add tourName to params that defaults to None
@@ -50,26 +51,38 @@ def load_setlists_from_artist(artist): #could take in artist ID or artist object
 
     return db_setlist_list
 
+
 def add_songs_to_db(artist, db_setlist_list):
+    """Add songs from list of strings to db with primary_artist id."""
+
     for song in db_setlist_list:
-
-        #db_song = Song(song_name = song['name'])
-        db_song = Song(song_name = song)
-        db.session.add(db_song)
-        db.session.commit()
-
-        artist.songs.append(db_song) #append to artist object
-    return
-
-def create_playlist_in_db(playlist_title):
-    # Playlist.query.delete()
-
-    playlist = Playlist(playlist_title=playlist_title)
-
-    db.session.add(playlist)
+        artist.songs.append(Song(song_name = song))
     db.session.commit()
 
-# update playlist function
+    return
+
+
+def create_playlist_in_db(playlist_title):
+    """Creates playlist in db if not already in db."""
+    if not Playlist.query.filter_by(playlist_title=playlist_title).first():
+        playlist = Playlist(playlist_title=playlist_title)
+        db.session.add(playlist)
+        db.session.commit()
+
+    else:
+        playlist = Playlist.query.filter_by(playlist_title=playlist_title).first()
+
+    return playlist
+
+
+def add_songs_to_playlist(artist,playlist):
+    """Add songs from Artist object to Playlist object in db."""
+
+    for song in artist.songs:
+        playlist.songs.append(song)
+    db.session.commit()
+
+    return
 
 if __name__ == "__main__":
     connect_to_db(app)

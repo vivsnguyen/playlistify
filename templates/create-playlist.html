@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block content %}
+{% block title %} Create playlist {% endblock %}
+
+<form action = '/create-playlist' method="POST">
+    <label>Playlist title</label><input type="text" name = "playlist_title">
+
+    <input type = "submit">
+
+{% endblock %}
