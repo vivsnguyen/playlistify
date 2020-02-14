@@ -26,6 +26,8 @@ app.jinja_env.undefined = StrictUndefined
 @app.route('/')
 def index():
     """Homepage."""
+    print(Playlist.query.all())
+    # print(PlaylistSong.query.all())
 
     return render_template("homepage.html")
 
@@ -89,11 +91,17 @@ def show_clear_playlist_form():
 @app.route('/clear-playlists', methods=["POST"])
 def clear_playlist():
     """Deletes playlists from db."""
-    
-    os.system("dropdb playlist-creator")
-    os.system("createdb playlist-creator")
+    print("clearing playlists")
+    PlaylistSong.query.delete()
 
-    db.create_all()
+    Playlist.query.delete()
+    db.session.commit()
+    print(Playlist.query.all())
+    print(PlaylistSong.query.all())
+    # os.system("dropdb playlist-creator")
+    # os.system("createdb playlist-creator")
+    #
+    # db.create_all()
 
     flash('All playlists deleted.')
     return redirect('/')
