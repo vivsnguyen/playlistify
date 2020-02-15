@@ -2,7 +2,7 @@
 
 from jinja2 import StrictUndefined
 
-from flask import (Flask, render_template, redirect, request, flash, session)
+from flask import (Flask, render_template, redirect, request, flash, session, jsonify)
 from flask_debugtoolbar import DebugToolbarExtension
 
 from model import Artist, Song, Playlist, PlaylistSong, connect_to_db, db
@@ -26,8 +26,6 @@ app.jinja_env.undefined = StrictUndefined
 @app.route('/')
 def index():
     """Homepage."""
-    print(Playlist.query.all())
-    # print(PlaylistSong.query.all())
 
     return render_template("homepage.html")
 
@@ -69,7 +67,6 @@ def show_add_to_playlist_form():
 @app.route('/add-to-playlist', methods=["POST"])
 def add_to_playlist():
     """Creates or updates playlist with songs."""
-
     playlist_title = request.form.get('playlist_title')
     artist_name = request.form.get('artist_name')
 
@@ -78,9 +75,11 @@ def add_to_playlist():
     add_songs_to_db(artist, setlists)
     playlist = create_playlist_in_db(playlist_title)
     add_songs_to_playlist(artist,playlist)
+    #remove when choosing songs
 
-    flash('Songs added successfully.')
+    flash(f'Songs added successfully to {playlist_title} playlist.')
     return redirect('/')
+
 
 @app.route('/clear-playlists', methods=["GET"])
 def show_clear_playlist_form():
@@ -91,17 +90,11 @@ def show_clear_playlist_form():
 @app.route('/clear-playlists', methods=["POST"])
 def clear_playlist():
     """Deletes playlists from db."""
-    print("clearing playlists")
-    PlaylistSong.query.delete()
 
+    PlaylistSong.query.delete()
     Playlist.query.delete()
+
     db.session.commit()
-    print(Playlist.query.all())
-    print(PlaylistSong.query.all())
-    # os.system("dropdb playlist-creator")
-    # os.system("createdb playlist-creator")
-    #
-    # db.create_all()
 
     flash('All playlists deleted.')
     return redirect('/')

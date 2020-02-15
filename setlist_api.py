@@ -1,6 +1,7 @@
 """Utility file for setlist.fm api."""
 import requests
 from sqlalchemy import func
+from sqlalchemy.exc import IntegrityError
 from model import Artist, Song, Playlist, PlaylistSong
 from model import connect_to_db, db
 import server
@@ -33,6 +34,7 @@ def load_setlists_from_artist(artist): #could take in artist ID or artist object
     #a list of dicts
     setlist_list = response['setlist']
 
+
     setlist_num = 0
 
     chosen_setlist = setlist_list[setlist_num]['sets']['set']
@@ -57,9 +59,12 @@ def add_songs_to_db(artist, db_setlist_list):
     """Add songs from list of strings to db with primary_artist id."""
 
     for song in db_setlist_list:
-        artist.songs.append(Song(song_name = song))
-    db.session.commit()
-
+        try:
+            artist.songs.append(Song(song_name = song))
+            db.session.commit()
+        except IntegrityError:
+            db.session.rollback()
+            continue
     return
 
 

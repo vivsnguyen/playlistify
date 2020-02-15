@@ -30,6 +30,8 @@ class Song(db.Model):
     """Songs from setlists of chosen artist."""
 
     __tablename__ = "songs"
+    __table_args__ = (db.UniqueConstraint('primary_artist', 'song_name'),)
+
 
     song_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     song_name = db.Column(db.String(200), nullable=True)

@@ -2,12 +2,12 @@
 {% block content %}
 {% block title %} Add to playlist {% endblock %}
 
-<form action = '/add-to-playlist' method="POST">
-    <label>Playlist title</label><input type="text" name = "playlist_title" required>
+<form action = '/add-to-playlist' method="POST" id = playlist-form>
+    <label>Playlist title</label><input type="text" name = "playlist_title" id = "playlist-field" required>
 
-    <label>Artist name</label><input type="text" name = "artist_name">
-
+    <label>Artist name</label><input type="text" name = "artist_name" id = "artist-field">
 
     <input type = "submit">
+
 
 {% endblock %}
