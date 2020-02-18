@@ -32,7 +32,10 @@ def load_setlists_from_artist(artist): #could take in artist ID or artist object
     response = requests.get(url,params=params_info,headers=header_info).json()
 
     #a list of dicts
-    setlist_list = response['setlist']
+    if response.get('setlist') is None:
+        return []
+    else:
+        setlist_list = response['setlist']
 
 
     setlist_num = 0
@@ -57,15 +60,14 @@ def load_setlists_from_artist(artist): #could take in artist ID or artist object
 
 def add_songs_to_db(artist, db_setlist_list):
     """Add songs from list of strings to db with primary_artist id."""
-
-    for song in db_setlist_list:
-        try:
-            artist.songs.append(Song(song_name = song))
-            db.session.commit()
-        except IntegrityError:
-            db.session.rollback()
-            continue
-    return
+    if db_setlist_list:
+        for song in db_setlist_list:
+            try:
+                artist.songs.append(Song(song_name = song))
+                db.session.commit()
+            except IntegrityError:
+                db.session.rollback()
+                continue
 
 
 def create_playlist_in_db(playlist_title):
