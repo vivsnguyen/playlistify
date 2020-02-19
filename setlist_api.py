@@ -6,8 +6,9 @@ from model import Artist, Song, Playlist, PlaylistSong
 from model import connect_to_db, db
 import server
 # from server import app
+from secrets import setlist_fm_api_key
 
-header_info = {'Accept' : 'application/json', 'x-api-key' : 'nrpEosh7l8AsjeWaokp9PZ4T2LYtkb2ctTS2'}
+header_info = {'Accept' : 'application/json', 'x-api-key' : setlist_fm_api_key}
 
 def add_artist_to_db(artist_name):
     """Adds artist to db if not already in db."""
@@ -22,7 +23,7 @@ def add_artist_to_db(artist_name):
     return artist
 
 
-def load_setlists_from_artist(artist): #could take in artist ID or artist object
+def load_setlists_from_artist(artist): 
     """Create a list of songs by chosen artist from a setlist."""
     #add tourName to params that defaults to None
     url = 'https://api.setlist.fm/rest/1.0/search/setlists'

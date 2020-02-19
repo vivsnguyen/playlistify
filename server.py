@@ -74,7 +74,6 @@ def add_to_playlist():
     setlist_api.add_songs_to_db(artist, setlists)
     playlist = setlist_api.create_playlist_in_db(playlist_title)
     setlist_api.add_songs_to_playlist(artist,playlist)
-    #remove when choosing songs
 
     flash(f'Songs added successfully to {playlist_title} playlist.')
     return redirect('/')
@@ -111,6 +110,6 @@ if __name__ == "__main__":
 
     # Use the DebugToolbar
     DebugToolbarExtension(app)
-    #app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
+    app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False #for error: AttributeError: 'Request' object has no attribute 'is_xhr'
 
     app.run(port=5000, host='0.0.0.0')
