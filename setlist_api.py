@@ -23,7 +23,7 @@ def add_artist_to_db(artist_name):
     return artist
 
 
-def load_setlists_from_artist(artist): 
+def load_setlists_from_artist(artist):
     """Create a list of songs by chosen artist from a setlist."""
     #add tourName to params that defaults to None
     url = 'https://api.setlist.fm/rest/1.0/search/setlists'
@@ -92,6 +92,14 @@ def add_songs_to_playlist(artist,playlist):
     db.session.commit()
 
     return
+
+def create_playlist(artist_name, playlist_title):
+    artist = add_artist_to_db(artist_name)
+    setlists = load_setlists_from_artist(artist)
+    add_songs_to_db(artist, setlists)
+    playlist = create_playlist_in_db(playlist_title)
+    add_songs_to_playlist(artist,playlist)
+
 
 if __name__ == "__main__":
     connect_to_db(server.app)

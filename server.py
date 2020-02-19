@@ -28,21 +28,21 @@ def index():
 
     return render_template("homepage.html")
 
-@app.route('/create-playlist', methods=["GET"])
-def show_create_playlist_form():
-    """Shows create playlist page."""
+# @app.route('/create-playlist', methods=["GET"])
+# def show_create_playlist_form():
+#     """Shows create playlist page."""
+#
+#     return render_template("create-playlist.html")
 
-    return render_template("create-playlist.html")
-
-@app.route('/create-playlist', methods=["POST"])
-def create_playlist():
-    """Creates playlist in db."""
-
-    playlist_title = request.form.get('playlist_title')
-    setlist_api.create_playlist_in_db(playlist_title)
-
-    flash(f'Playlist {playlist_title} created successfully.')
-    return redirect('/')
+# @app.route('/create-playlist', methods=["POST"])
+# def create_playlist():
+#     """Creates playlist in db."""
+#
+#     playlist_title = request.form.get('playlist_title')
+#     setlist_api.create_playlist_in_db(playlist_title)
+#
+#     flash(f'Playlist {playlist_title} created successfully.')
+#     return redirect('/')
 
 
 @app.route('/display-playlists')
@@ -69,11 +69,7 @@ def add_to_playlist():
     playlist_title = request.form.get('playlist_title')
     artist_name = request.form.get('artist_name')
 
-    artist = setlist_api.add_artist_to_db(artist_name)
-    setlists = setlist_api.load_setlists_from_artist(artist)
-    setlist_api.add_songs_to_db(artist, setlists)
-    playlist = setlist_api.create_playlist_in_db(playlist_title)
-    setlist_api.add_songs_to_playlist(artist,playlist)
+    setlist_api.create_playlist(artist_name, playlist_title)
 
     flash(f'Songs added successfully to {playlist_title} playlist.')
     return redirect('/')

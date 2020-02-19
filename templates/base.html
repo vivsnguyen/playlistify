@@ -7,6 +7,12 @@
     <!-- my css  -->
     <link rel="stylesheet" href="/static/style.css">
 
+    <!-- jQuery  -->
+    <script
+    src="https://code.jquery.com/jquery-3.4.1.js"
+    integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+    crossorigin="anonymous"></script>
+
   <title>{% block title %} TITLE HERE {% endblock %}</title>
     {% with messages = get_flashed_messages() %}
         {% if messages %}
@@ -15,16 +21,15 @@
             {% endfor %}
         {% endif %}
     {% endwith %}
-    <script
-    src="https://code.jquery.com/jquery-3.4.1.js"
-    integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
-    crossorigin="anonymous"></script>
+
 </head>
 
 <body>
 
-
   {% block content %} put your content here {% endblock %}
 
+{% block scripts %}
+<script src="/static/displayPlaylists.js"></script>
+{% endblock %}
 </body>
 </html>
