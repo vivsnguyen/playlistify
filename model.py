@@ -78,6 +78,14 @@ class PlaylistSong(db.Model):
     def __repr__(self):
         return f"<PlaylistSong artist_id={self.artist_id} song_id={self.song_id}>"
 
+def clear_data():
+    PlaylistSong.query.delete()
+    Playlist.query.delete()
+    Song.query.delete()
+    Artist.query.delete()
+
+    db.session.commit()
+
 ##############################################################################
 # Helper functions
 

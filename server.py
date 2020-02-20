@@ -5,7 +5,7 @@ from jinja2 import StrictUndefined
 from flask import (Flask, render_template, redirect, request, flash, session, jsonify)
 from flask_debugtoolbar import DebugToolbarExtension
 
-from model import Artist, Song, Playlist, PlaylistSong, connect_to_db, db
+from model import Artist, Song, Playlist, PlaylistSong, clear_data, connect_to_db, db
 
 import setlist_api
 import spotify_api
@@ -85,10 +85,7 @@ def show_clear_playlist_form():
 def clear_playlist():
     """Deletes playlists from db."""
 
-    PlaylistSong.query.delete()
-    Playlist.query.delete()
-
-    db.session.commit()
+    clear_data()
 
     flash('All playlists deleted.')
     return redirect('/')
