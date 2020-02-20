@@ -113,19 +113,29 @@ def adjust_length_playlist(spotify_artist_id, filtered_track_uris):
             filtered_track_uris.append(track)
 
     return filtered_track_uris
+#***********************************
+
 
 def add_tracks_to_spotify_playlist(track_uris, playlist_id='6xw6BTN8RRWU7bbJ9TBWWY'):
     """Adds songs to Spotify playlist via POST request."""
-    #only adds one song ???????
 
     url = f'https://api.spotify.com/v1/playlists/{playlist_id}/tracks'
 
-    params_info = {'playlist_id' : playlist_id,
-                    'uris' : filtered_track_uris}
+    params_info = {'uris' : track_uris}
 
-    response = requests.post(url,params=params_info,headers=header_info).json()
+    response = requests.post(url,data=json.dumps(params_info),headers=header_info).json()
 
     return response
+
+def create_spotify_playlist_from_db(playlist_title):
+    """Process of creating playlist on spotify from db playlist."""
+
+    playlist_id = create_playlist_on_spotify(playlist_title, user_id='vivivi.n', public = False)
+
+    track_uris = get_track_uris_from_user_playlist(playlist_title)
+
+    add_tracks_to_spotify_playlist(track_uris, playlist_id)
+
 
 #*******************
 def request_authorization():
@@ -137,6 +147,8 @@ def request_authorization():
                     'scope' : 'playlist-read-private'}
 
     response = requests.get(url,params=params_info)
+#********************
+
 
 if __name__ == "__main__":
     connect_to_db(server.app)

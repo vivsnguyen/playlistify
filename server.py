@@ -74,6 +74,19 @@ def add_to_playlist():
     flash(f'Songs added successfully to {playlist_title} playlist.')
     return redirect('/')
 
+#*********************************
+@app.route('/add-to-spotify-playlist', methods=["POST"])
+def add_to_spotify_playlist():
+    """Adds playlist to spotify."""
+    #get playlist title from jinja loop
+    playlist_title = request.form.get('playlist_title')
+
+    spotify_api.create_spotify_playlist_from_db(playlist_title) #need to get spotify user_id, public or private?
+
+    flash(f'Songs added successfully to {playlist_title} playlist on Spotify.')
+    return redirect('/')
+#************************************
+
 
 @app.route('/clear-playlists', methods=["GET"])
 def show_clear_playlist_form():
