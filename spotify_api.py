@@ -1,5 +1,6 @@
 """Utility file for Spotify api."""
 import requests
+import json
 from sqlalchemy import func
 from model import Artist, Song, Playlist, PlaylistSong
 from model import connect_to_db, db
@@ -10,9 +11,29 @@ header_info = {'Accept':'application/json',
     'Content-Type': 'application/json',
     'Authorization': f'Bearer {spotify_api_key}'}
 
+def create_playlist_on_spotify(playlist_title, user_id='vivivi.n', public = False):
+    """Create a playlist on Spotify and return its id."""
+    url = f'https://api.spotify.com/v1/users/{user_id}/playlists'
+
+    params_info = {
+      "name": playlist_title,
+      "description": "New playlist description",
+      "public": 'false'
+    }
+
+    response = requests.post(url,data=json.dumps(params_info),headers=header_info).json()
+
+    return response['id']
 
 def get_artist_id_by_artist_name(artist_name):
-    """Get artist's Spotify id by artist name."""
+    """
+    Get artist's Spotify id by artist name.
+
+    >>> artist = get_artist_id_by_artist_name('boy pablo')
+
+    >>> print(artist)
+    7wbkl3zgDZEoZer357mVIw
+    """
 
     url = 'https://api.spotify.com/v1/search'
     params_info = {'q': artist_name, 'type' : 'artist'}
@@ -20,9 +41,9 @@ def get_artist_id_by_artist_name(artist_name):
 
     if response['artists']['items']:
         spotify_artist_id = response['artists']['items'][0]['id'] #['artists']['items'][0] gives first search result
-
     else:
         return None
+
     return spotify_artist_id
 
 
@@ -53,14 +74,15 @@ def get_top_tracks_by_artist(spotify_artist_id):
     track_uris = []
 
     if spotify_artist_id:
-        url = f'https://api.spotify.com/v1/artists/{id}/top-tracks'
+        url = f'https://api.spotify.com/v1/artists/{spotify_artist_id}/top-tracks'
 
-        params_info = {'id': spotify_artist_id, 'country': 'US'}
+        params_info = {'country': 'US'}
 
         response = requests.get(url,params=params_info,headers=header_info).json()
 
-        for i in range(5):
-            track_ids.append(response['tracks'][i]['uri'])
+        if response.get('tracks'):
+            for i in range(5):
+                track_uris.append(response['tracks'][i]['uri'])
 
     return track_uris
 
@@ -77,8 +99,35 @@ def get_track_uris_from_user_playlist(playlist_title):
 
             track_uris.append(get_song_uri_by_song_name(song.song_name, artist_name))
 
-    return track_uris
+    filtered_track_uris = [uri for uri in track_uris if uri != None]
 
+    return filtered_track_uris
+
+#*********TEST THIS FUNCTION*******
+def adjust_length_playlist(spotify_artist_id, filtered_track_uris):
+    """If setlist songs < 10, add artist's top tracks uri's."""
+    if len(filtered_track_uris) < 10:
+        top_tracks_uris = get_top_tracks_by_artist(spotify_artist_id)
+
+        for track in top_tracks_uris:
+            filtered_track_uris.append(track)
+
+    return filtered_track_uris
+
+def add_tracks_to_spotify_playlist(track_uris, playlist_id='6xw6BTN8RRWU7bbJ9TBWWY'):
+    """Adds songs to Spotify playlist via POST request."""
+    #only adds one song ???????
+
+    url = f'https://api.spotify.com/v1/playlists/{playlist_id}/tracks'
+
+    params_info = {'playlist_id' : playlist_id,
+                    'uris' : filtered_track_uris}
+
+    response = requests.post(url,params=params_info,headers=header_info).json()
+
+    return response
+
+#*******************
 def request_authorization():
     url = 'https://accounts.spotify.com/authorize'
 
