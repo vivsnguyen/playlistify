@@ -5,11 +5,28 @@ from sqlalchemy import func
 from model import Artist, Song, Playlist, PlaylistSong
 from model import connect_to_db, db
 import server
-from secrets import spotify_api_key, spotify_client_id
+import secrets
+import spotipy
 
 header_info = {'Accept':'application/json',
     'Content-Type': 'application/json',
-    'Authorization': f'Bearer {spotify_api_key}'}
+    'Authorization': f'Bearer {secrets.spotify_api_key}'}
+
+#*******************
+def spotify_authorization():
+    username = request.args.get('username')
+    scope = 'playlist-modify-private playlist-modify-public user-read-private'
+
+    token = spotipy.util.prompt_for_user_token(username, scope,
+    client_id=os.environ['SPOTIPY_CLIENT_ID'],
+    client_secret=os.environ['SPOTIPY_CLIENT_SECRET'],
+    redirect_uri=os.environ['SPOTIPY_REDIRECT_URI'])
+
+    if token:
+        sp = spotipy.Spotify(auth=token)
+    else:
+        print("Can't get token for", username)
+#********************
 
 def create_playlist_on_spotify(playlist_title, user_id='vivivi.n', public = False):
     """Create a playlist on Spotify and return its id."""
@@ -103,17 +120,17 @@ def get_track_uris_from_user_playlist(playlist_title):
 
     return filtered_track_uris
 
-#*********TEST THIS FUNCTION*******
+
 def adjust_length_playlist(spotify_artist_id, filtered_track_uris):
     """If setlist songs < 10, add artist's top tracks uri's."""
+    new_playlist = list(filtered_track_uris)
     if len(filtered_track_uris) < 10:
         top_tracks_uris = get_top_tracks_by_artist(spotify_artist_id)
 
         for track in top_tracks_uris:
-            filtered_track_uris.append(track)
+            new_playlist.append(track)
 
-    return filtered_track_uris
-#***********************************
+    return new_playlist
 
 
 def add_tracks_to_spotify_playlist(track_uris, playlist_id='6xw6BTN8RRWU7bbJ9TBWWY'):
@@ -135,19 +152,6 @@ def create_spotify_playlist_from_db(playlist_title):
     track_uris = get_track_uris_from_user_playlist(playlist_title)
 
     add_tracks_to_spotify_playlist(track_uris, playlist_id)
-
-
-#*******************
-def request_authorization():
-    url = 'https://accounts.spotify.com/authorize'
-
-    params_info = {'client_id' : spotify_client_id,
-                    'response_type' : 'code',
-                    'redirect_uri' : 'http://0.0.0.0:5000/',
-                    'scope' : 'playlist-read-private'}
-
-    response = requests.get(url,params=params_info)
-#********************
 
 
 if __name__ == "__main__":

@@ -1,5 +1,5 @@
 """Playlist creator."""
-
+import os
 from jinja2 import StrictUndefined
 
 from flask import (Flask, render_template, redirect, request, flash, session, jsonify)
@@ -8,7 +8,11 @@ from flask_debugtoolbar import DebugToolbarExtension
 from model import Artist, Song, Playlist, PlaylistSong, clear_data, connect_to_db, db
 
 import setlist_api
-import spotify_api
+#import spotify_api
+import secrets
+import requests
+
+import spotipy
 
 
 app = Flask(__name__)
@@ -16,9 +20,6 @@ app = Flask(__name__)
 # Required to use Flask sessions and the debug toolbar
 app.secret_key = "ABC"
 
-# Normally, if you use an undefined variable in Jinja2, it fails
-# silently. This is horrible. Fix this so that, instead, it raises an
-# error.
 app.jinja_env.undefined = StrictUndefined
 
 
@@ -44,17 +45,37 @@ def index():
 #     flash(f'Playlist {playlist_title} created successfully.')
 #     return redirect('/')
 
+@app.route('/spotify-account')
+def spotify_account():
+    return render_template("spotify-account.html")
+
+@app.route('/spotify-authorize')
+def spotify_authorize():
+
+    username = request.args.get('username')
+    scope = 'playlist-modify-private playlist-modify-public user-read-private'
+
+    token = spotipy.util.prompt_for_user_token(username, scope,
+    client_id=os.environ['SPOTIPY_CLIENT_ID'],
+    client_secret=os.environ['SPOTIPY_CLIENT_SECRET'],
+    redirect_uri=os.environ['SPOTIPY_REDIRECT_URI'])
+
+    if token:
+        sp = spotipy.Spotify(auth=token)
+    else:
+        print("Can't get token for", username)
+
 
 @app.route('/display-playlists')
 def display_playlists():
     """Show playlists on page."""
+
     if Playlist.query.first():
     #check if playlists have a query
         playlists = Playlist.query.all()
         return render_template("display-playlists.html", playlists=playlists)
     else:
-        flash('No playlists to display.')
-        return redirect('/')
+        return 'No playlists to display.'
 
 
 @app.route('/add-to-playlist', methods=["GET"])
