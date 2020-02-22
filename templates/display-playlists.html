@@ -7,7 +7,7 @@
   <ul>
     {% if playlists %}
         {% for playlist in playlists %}
-            <h3 id="playlist_title"> {{ playlist.playlist_title }} </h3>
+            <h3> {{ playlist.playlist_title }} </h3>
             {% for song in playlist.songs %}
               <li>
                 {{ song.song_name }}
@@ -16,13 +16,16 @@
                 </a>
               </li>
             {% endfor %}
-            <button id="add-to-spotify-button">Add playlist to Spotify?</button>
+            <form action='/add-to-spotify-playlist' method="POST">
+                <input type='hidden' name="playlist_title" value='{{ playlist.playlist_title }}' />
+                <input type="submit" value="Add playlist to Spotify?"/>
+            </form>
         {% endfor %}
     {% endif %}
   </ul>
 
     <!-- <script src="https://sdk.scdn.co/spotify-player.js"></script>
     <script src="/static/spotifyWebSDK.js"></script> -->
-
+<!-- <script src="/static/addToSpotifyPlaylist.js"></script> -->
 
 {% endblock %}
