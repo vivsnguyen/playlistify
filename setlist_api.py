@@ -1,4 +1,5 @@
 """Utility file for setlist.fm api."""
+import os
 import requests
 from sqlalchemy import func
 from sqlalchemy.exc import IntegrityError
@@ -6,9 +7,9 @@ from model import Artist, Song, Playlist, PlaylistSong
 from model import connect_to_db, db
 import server
 # from server import app
-from secrets import setlist_fm_api_key
 
-header_info = {'Accept' : 'application/json', 'x-api-key' : setlist_fm_api_key}
+
+header_info = {'Accept' : 'application/json', 'x-api-key' : os.environ['SPOTIPY_CLIENT_ID']}
 
 def add_artist_to_db(artist_name):
     """Adds artist to db if not already in db."""
