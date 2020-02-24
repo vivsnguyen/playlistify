@@ -1,5 +1,6 @@
 """Playlist creator."""
 import os
+import requests
 from jinja2 import StrictUndefined
 
 from flask import (Flask, render_template, redirect, request, flash, session, jsonify)
@@ -7,12 +8,13 @@ from flask_debugtoolbar import DebugToolbarExtension
 
 from model import Artist, Song, Playlist, PlaylistSong, clear_data, connect_to_db, db
 
-import setlist_api
-#import spotify_api
-import secrets
-import requests
-
 import spotipy
+
+import setlist_api
+import spotify_api
+
+
+
 
 
 app = Flask(__name__)
@@ -29,41 +31,18 @@ def index():
 
     return render_template("homepage.html")
 
-# @app.route('/create-playlist', methods=["GET"])
-# def show_create_playlist_form():
-#     """Shows create playlist page."""
-#
-#     return render_template("create-playlist.html")
-
-# @app.route('/create-playlist', methods=["POST"])
-# def create_playlist():
-#     """Creates playlist in db."""
-#
-#     playlist_title = request.form.get('playlist_title')
-#     setlist_api.create_playlist_in_db(playlist_title)
-#
-#     flash(f'Playlist {playlist_title} created successfully.')
-#     return redirect('/')
-
 @app.route('/spotify-account')
 def spotify_account():
     return render_template("spotify-account.html")
 
+#**********************
 @app.route('/spotify-authorize')
 def spotify_authorize():
+    """"""
 
     username = request.args.get('username')
-    scope = 'playlist-modify-private playlist-modify-public user-read-private'
-
-    token = spotipy.util.prompt_for_user_token(username, scope,
-    client_id=os.environ['SPOTIPY_CLIENT_ID'],
-    client_secret=os.environ['SPOTIPY_CLIENT_SECRET'],
-    redirect_uri=os.environ['SPOTIPY_REDIRECT_URI'])
-
-    if token:
-        sp = spotipy.Spotify(auth=token)
-    else:
-        print("Can't get token for", username)
+    spotify_api.spotify_authorization(username)
+#************************
 
 
 @app.route('/display-playlists')

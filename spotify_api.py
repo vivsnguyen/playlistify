@@ -5,16 +5,16 @@ from sqlalchemy import func
 from model import Artist, Song, Playlist, PlaylistSong
 from model import connect_to_db, db
 import server
-import secrets
 import spotipy
 
 header_info = {'Accept':'application/json',
     'Content-Type': 'application/json',
     'Authorization': f'Bearer {secrets.spotify_api_key}'}
+    #fix!!!!! api key
 
 #*******************
-def spotify_authorization():
-    username = request.args.get('username')
+def spotify_authorization(username):
+    
     scope = 'playlist-modify-private playlist-modify-public user-read-private'
 
     token = spotipy.util.prompt_for_user_token(username, scope,
