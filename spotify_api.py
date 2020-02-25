@@ -1,4 +1,5 @@
 """Utility file for Spotify api."""
+import os
 import requests
 import json
 from sqlalchemy import func
@@ -7,14 +8,16 @@ from model import connect_to_db, db
 import server
 import spotipy
 
+token = 'BQC5kAPuXiQwcFuyl-ijhOeJAG5Xf4bikLIigAwpmQOOVxDgCh8ClqYLxaM_-78CwH0dgU7VfSpiT9Y8BUEIP39qkTor-9cBHh8rl3nvpLF9OSo4gdd9LyPND719Bt0N0SgzCS94SBIWKm42be490P3TXoMreqkmMCHioT8vZJxSTbHtiU46bL3nA71SFJVSlg'
+
 header_info = {'Accept':'application/json',
     'Content-Type': 'application/json',
-    'Authorization': f'Bearer {secrets.spotify_api_key}'}
-    #fix!!!!! api key
+    'Authorization': f'Bearer {token}'}
+
 
 #*******************
 def spotify_authorization(username):
-    
+
     scope = 'playlist-modify-private playlist-modify-public user-read-private'
 
     token = spotipy.util.prompt_for_user_token(username, scope,
@@ -23,6 +26,7 @@ def spotify_authorization(username):
     redirect_uri=os.environ['SPOTIPY_REDIRECT_URI'])
 
     if token:
+        header_info['Authorization'] = f'Bearer {token}'
         sp = spotipy.Spotify(auth=token)
     else:
         print("Can't get token for", username)
@@ -82,8 +86,9 @@ def get_song_uri_by_song_name(song_name, artist_name):
     if response['tracks']['items']:
         for i in range(len(response['tracks']['items'])):
             if response['tracks']['items'][i]['artists'][0].get('name') == artist_name:
-                return response['tracks']['items'][0]['uri']
-
+                return response['tracks']['items'][i]['uri']
+            else:
+                continue
 
 def get_top_tracks_by_artist(spotify_artist_id):
     """Get the Spotify track URI's of an artist's top 5 tracks."""

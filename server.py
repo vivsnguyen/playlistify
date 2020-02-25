@@ -81,6 +81,7 @@ def add_to_spotify_playlist():
     #get playlist title from jinja loop
     playlist_title = request.form.get('playlist_title')
 
+    #check if token in session?
     # spotify_api.create_spotify_playlist_from_db(playlist_title) #need to get spotify user_id, public or private?
     flash(f'Songs added successfully to {playlist_title} playlist on Spotify.')
     return redirect('/')
