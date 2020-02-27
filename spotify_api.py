@@ -8,11 +8,10 @@ from model import connect_to_db, db
 import server
 import spotipy
 
-token = 'BQC5kAPuXiQwcFuyl-ijhOeJAG5Xf4bikLIigAwpmQOOVxDgCh8ClqYLxaM_-78CwH0dgU7VfSpiT9Y8BUEIP39qkTor-9cBHh8rl3nvpLF9OSo4gdd9LyPND719Bt0N0SgzCS94SBIWKm42be490P3TXoMreqkmMCHioT8vZJxSTbHtiU46bL3nA71SFJVSlg'
-
 header_info = {'Accept':'application/json',
-    'Content-Type': 'application/json',
-    'Authorization': f'Bearer {token}'}
+    'Content-Type': 'application/json'}
+
+user_info = {}
 
 
 #*******************
@@ -25,20 +24,23 @@ def spotify_authorization(username):
     client_secret=os.environ['SPOTIPY_CLIENT_SECRET'],
     redirect_uri=os.environ['SPOTIPY_REDIRECT_URI'])
 
+    user_info['username'] = username
+
     if token:
         header_info['Authorization'] = f'Bearer {token}'
         sp = spotipy.Spotify(auth=token)
+        return token
     else:
         print("Can't get token for", username)
 #********************
 
-def create_playlist_on_spotify(playlist_title, user_id='vivivi.n', public = False):
+def create_playlist_on_spotify(playlist_title, user_id, public = False):
     """Create a playlist on Spotify and return its id."""
     url = f'https://api.spotify.com/v1/users/{user_id}/playlists'
 
     params_info = {
       "name": playlist_title,
-      "description": "New playlist description",
+      #"description": "New playlist description",
       "public": 'false'
     }
 
@@ -149,10 +151,10 @@ def add_tracks_to_spotify_playlist(track_uris, playlist_id='6xw6BTN8RRWU7bbJ9TBW
 
     return response
 
-def create_spotify_playlist_from_db(playlist_title):
+def create_spotify_playlist_from_db(playlist_title, username):
     """Process of creating playlist on spotify from db playlist."""
 
-    playlist_id = create_playlist_on_spotify(playlist_title, user_id='vivivi.n', public = False)
+    playlist_id = create_playlist_on_spotify(playlist_title, user_id=user_info['username'], public = False)
 
     track_uris = get_track_uris_from_user_playlist(playlist_title)
 

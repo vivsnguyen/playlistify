@@ -6,7 +6,7 @@ from jinja2 import StrictUndefined
 from flask import (Flask, render_template, redirect, request, flash, session, jsonify)
 from flask_debugtoolbar import DebugToolbarExtension
 
-from model import Artist, Song, Playlist, PlaylistSong, clear_data, connect_to_db, db
+from model import User, Artist, Song, Playlist, PlaylistSong, clear_data, connect_to_db, db
 
 import spotipy
 
@@ -41,14 +41,17 @@ def spotify_authorize():
     """"""
 
     username = request.args.get('username')
+    #add username to session
     spotify_api.spotify_authorization(username)
+
+    return redirect('/') #??????
 #************************
 
 
 @app.route('/display-playlists')
 def display_playlists():
     """Show playlists on page."""
-
+    #connect to USER ?????
     if Playlist.query.first():
     #check if playlists have a query
         playlists = Playlist.query.all()
@@ -64,12 +67,15 @@ def show_add_to_playlist_form():
     return render_template("add-to-playlist.html")
 
 @app.route('/add-to-playlist', methods=["POST"])
-def add_to_playlist():
-    """Creates or updates playlist with songs."""
-    playlist_title = request.form.get('playlist_title')
-    artist_name = request.form.get('artist_name')
+def db_add_to_playlist():
+    """Adds to playlist in db."""
 
-    setlist_api.create_playlist(artist_name, playlist_title)
+    playlist_title = request.form.get('playlist_title')
+    artist_name = request.form.get('playlist_title')
+
+    user_id = session.get("user_id")
+
+    setlist_api.db_create_playlist(playlist_title, artist_name, user_id)
 
     flash(f'Songs added successfully to {playlist_title} playlist.')
     return redirect('/')
@@ -103,6 +109,110 @@ def clear_playlist():
     flash('All playlists deleted.')
     return redirect('/')
 
+@app.route("/log-in", methods=["GET"])
+def show_login_form():
+    """Show login form or registration button for users."""
+
+    user_id = session.get("user_id")
+
+    if user_id:
+        return redirect(f"/user-dashboard/{user_id}")
+
+    return render_template("user-login.html")
+
+
+@app.route("/log-in", methods=["POST"])
+def handle_login():
+    """Log-in a user."""
+
+    email = request.form.get("email")
+    password = request.form.get("password")
+
+    user = User.query.filter_by(email=email).first()
+
+    if not user:
+        flash(f"No account with {email}.")
+        return redirect("/log-in")
+
+    if not user.check_password(password):
+        flash("Incorrect password.")
+        return redirect("/log-in")
+
+    session["user_id"] = user.id
+    flash("Login successful.")
+    return redirect(f"/user-dashboard/{user.id}")
+
+@app.route("/register", methods=["GET"])
+def show_registration_form():
+    """Show registration form for users."""
+
+    return render_template("user-register.html")
+
+
+@app.route("/register", methods=["POST"])
+def process_user_registration():
+    """Process user registration."""
+
+    username = request.form.get("name")
+    email = request.form.get("email")
+    password = request.form.get("password")
+
+    if User.query.filter_by(email=email).first():
+        flash("An account with this email already exists.")
+        return redirect("/register")
+
+    new_user = User(name=username, email=email)
+
+    new_user.set_password(password)
+
+    db.session.add(new_user)
+    db.session.commit()
+
+    # Log in new user
+    session["user_id"] = new_user.id
+
+    flash(f"Successfully registered {username}.")
+    return redirect(f"/user-dashboard/{new_user.id}")
+
+
+
+@app.route("/logout")
+def logout():
+    """Log out of a user account."""
+
+    if session.get("user_id"):
+        del session["user_id"]
+        flash("Logout successful.")
+
+    return redirect("/")
+
+
+@app.route("/user-dashboard/<int:user_id>")
+def show_user_dashboard(user_id):
+    """Show a user's dashboard where they can view and edit playlists. ????????"""
+
+    if check_authorization(user_id):
+        user = User.query.get(user_id)
+        playlists = user.playlists
+
+        return render_template("user-dashboard.html",
+                                user=user,
+                                playlists=playlists)
+
+    return render_template("unauthorized.html")
+
+
+def check_authorization(user_id):
+    """Check to see if the logged in user is authorized to view page."""
+
+    # Get the current user's id.
+    session_user_id = session.get("user_id")
+
+    # If correct user is not logged in, return False.
+    if session_user_id != user_id:
+        return False
+
+    return True
 
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the

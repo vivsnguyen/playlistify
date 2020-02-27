@@ -27,7 +27,13 @@
 <body>
 
   {% block content %} put your content here {% endblock %}
+  {% block logout %}
 
+    {% if session.get("user_id") %}
+        <a href="/logout">LOGOUT</a>
+    {% endif %}
+
+  {% endblock %}
 {% block scripts %}
 <script src="/static/displayPlaylists.js"></script>
 

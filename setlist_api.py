@@ -3,13 +3,13 @@ import os
 import requests
 from sqlalchemy import func
 from sqlalchemy.exc import IntegrityError
-from model import Artist, Song, Playlist, PlaylistSong
+from model import User, Artist, Song, Playlist, PlaylistSong
 from model import connect_to_db, db
 import server
 # from server import app
 
 
-header_info = {'Accept' : 'application/json', 'x-api-key' : os.environ['SPOTIPY_CLIENT_ID']}
+header_info = {'Accept' : 'application/json', 'x-api-key' : os.environ['SETLIST_FM_API_KEY']}
 
 def add_artist_to_db(artist_name):
     """Adds artist to db if not already in db."""
@@ -71,12 +71,21 @@ def add_songs_to_db(artist, db_setlist_list):
                 db.session.rollback()
                 continue
 
+# def check_if_user_has_playlists(user_id):
 
-def create_playlist_in_db(playlist_title):
+
+def create_playlist_in_db(playlist_title, user_id):
     """Creates playlist in db if not already in db."""
+    user = User.query.get(user_id)
+
+    #check if user logged in
+    #check if no user, no playlists
+    #check if user has no playlists
+    print(user)
+
     if not Playlist.query.filter_by(playlist_title=playlist_title).first():
-        playlist = Playlist(playlist_title=playlist_title)
-        db.session.add(playlist)
+        playlist = user.playlists.append(Playlist(playlist_title=playlist_title))
+
         db.session.commit()
 
     else:
@@ -94,12 +103,12 @@ def add_songs_to_playlist(artist,playlist):
 
     return
 
-def create_playlist(artist_name, playlist_title):
+def db_create_playlist(artist_name, playlist_title, user_id):
     artist = add_artist_to_db(artist_name)
     setlists = load_setlists_from_artist(artist)
     add_songs_to_db(artist, setlists)
-    playlist = create_playlist_in_db(playlist_title)
-    add_songs_to_playlist(artist,playlist)
+    playlist = create_playlist_in_db(playlist_title, user_id)
+    add_songs_to_playlist(artist,user_id,playlist)
 
 
 if __name__ == "__main__":
