@@ -11,20 +11,16 @@ import spotipy
 header_info = {'Accept':'application/json',
     'Content-Type': 'application/json'}
 
-user_info = {}
-
 
 #*******************
 def spotify_authorization(username):
 
-    scope = 'playlist-modify-private playlist-modify-public user-read-private'
+    scope = 'playlist-modify-private playlist-modify-public user-read-private streaming user-read-email user-read-private'
 
     token = spotipy.util.prompt_for_user_token(username, scope,
     client_id=os.environ['SPOTIPY_CLIENT_ID'],
     client_secret=os.environ['SPOTIPY_CLIENT_SECRET'],
     redirect_uri=os.environ['SPOTIPY_REDIRECT_URI'])
-
-    user_info['username'] = username
 
     if token:
         header_info['Authorization'] = f'Bearer {token}'
@@ -154,7 +150,7 @@ def add_tracks_to_spotify_playlist(track_uris, playlist_id='6xw6BTN8RRWU7bbJ9TBW
 def create_spotify_playlist_from_db(playlist_title, username):
     """Process of creating playlist on spotify from db playlist."""
 
-    playlist_id = create_playlist_on_spotify(playlist_title, user_id=user_info['username'], public = False)
+    playlist_id = create_playlist_on_spotify(playlist_title, user_id=username, public = False)
 
     track_uris = get_track_uris_from_user_playlist(playlist_title)
 

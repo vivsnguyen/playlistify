@@ -41,7 +41,7 @@ def spotify_authorize():
     """"""
 
     username = request.args.get('username')
-    #add username to session
+    session['spotify username'] = username
     spotify_api.spotify_authorization(username)
 
     return redirect('/') #??????
@@ -71,24 +71,27 @@ def db_add_to_playlist():
     """Adds to playlist in db."""
 
     playlist_title = request.form.get('playlist_title')
-    artist_name = request.form.get('playlist_title')
+    artist_name = request.form.get('artist_name')
 
     user_id = session.get("user_id")
 
-    setlist_api.db_create_playlist(playlist_title, artist_name, user_id)
+    setlist_api.db_create_playlist(artist_name = artist_name, playlist_title = playlist_title, user_id = user_id)
+
 
     flash(f'Songs added successfully to {playlist_title} playlist.')
-    return redirect('/')
+    return redirect(f'/user-dashboard/{user_id}')
 
 #*********************************
 @app.route('/add-to-spotify-playlist', methods=["POST"])
 def add_to_spotify_playlist():
     """Adds playlist to spotify."""
-    #get playlist title from jinja loop
+
     playlist_title = request.form.get('playlist_title')
+    spotify_username = session.get('spotify username')
 
     #check if token in session?
-    # spotify_api.create_spotify_playlist_from_db(playlist_title) #need to get spotify user_id, public or private?
+    spotify_api.create_spotify_playlist_from_db(playlist_title, spotify_username)
+    #need to get spotify user_id, public or private?
     flash(f'Songs added successfully to {playlist_title} playlist on Spotify.')
     return redirect('/')
 #************************************

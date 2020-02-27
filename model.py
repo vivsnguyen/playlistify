@@ -75,7 +75,7 @@ class Playlist(db.Model):
     __tablename__ = "playlists"
 
     playlist_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    playlist_title = db.Column(db.String(80), nullable=True)
+    playlist_title = db.Column(db.String(80), unique=True, nullable=True)
 
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
 

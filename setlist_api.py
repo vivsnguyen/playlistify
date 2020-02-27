@@ -81,10 +81,10 @@ def create_playlist_in_db(playlist_title, user_id):
     #check if user logged in
     #check if no user, no playlists
     #check if user has no playlists
-    print(user)
 
-    if not Playlist.query.filter_by(playlist_title=playlist_title).first():
-        playlist = user.playlists.append(Playlist(playlist_title=playlist_title))
+    if not Playlist.query.filter_by(playlist_title=playlist_title, user_id=user_id).first():
+        playlist = Playlist(playlist_title=playlist_title)
+        user.playlists.append(playlist)
 
         db.session.commit()
 
@@ -98,15 +98,15 @@ def add_songs_to_playlist(artist, user_id, playlist):
     """Add songs from Artist object to Playlist object in db."""
     user = User.query.get(user_id)
 
-    for user_playlist in user.playlists:
-        if user_playlist.playlist_title == playlist.playlist_title:
-            playlist = user_playlist
+    # for user_playlist in user.playlists:
+    #     if user_playlist.playlist_title == playlist.playlist_title:
+    #         playlist = user_playlist
 
     for song in artist.songs:
         playlist.songs.append(song)
+
     db.session.commit()
 
-    return
 
 def db_create_playlist(artist_name, playlist_title, user_id):
     artist = add_artist_to_db(artist_name)
