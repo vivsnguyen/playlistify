@@ -25,14 +25,16 @@
 </head>
 
 <body>
+  {% block homepage %} <a href="/">HOMEPAGE</a> <br> {% endblock %}
 
   {% block content %} put your content here {% endblock %}
-  {% block logout %}
 
+  {% block logout %}
     {% if session.get("user_id") %}
         <a href="/logout">LOGOUT</a>
+    {% else %}
+        <a href="/log-in">User Log-in</a>
     {% endif %}
-
   {% endblock %}
 {% block scripts %}
 <script src="/static/displayPlaylists.js"></script>

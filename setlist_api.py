@@ -94,8 +94,13 @@ def create_playlist_in_db(playlist_title, user_id):
     return playlist
 
 
-def add_songs_to_playlist(artist,playlist):
+def add_songs_to_playlist(artist, user_id, playlist):
     """Add songs from Artist object to Playlist object in db."""
+    user = User.query.get(user_id)
+
+    for user_playlist in user.playlists:
+        if user_playlist.playlist_title == playlist.playlist_title:
+            playlist = user_playlist
 
     for song in artist.songs:
         playlist.songs.append(song)
@@ -108,7 +113,7 @@ def db_create_playlist(artist_name, playlist_title, user_id):
     setlists = load_setlists_from_artist(artist)
     add_songs_to_db(artist, setlists)
     playlist = create_playlist_in_db(playlist_title, user_id)
-    add_songs_to_playlist(artist,user_id,playlist)
+    add_songs_to_playlist(artist, user_id, playlist)
 
 
 if __name__ == "__main__":
