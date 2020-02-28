@@ -217,6 +217,14 @@ def check_authorization(user_id):
 
     return True
 
+@app.route("/play-music")
+def play_music():
+    """web sdk"""
+
+
+    return render_template('music-player.html')
+
+
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the
     # point that we invoke the DebugToolbarExtension

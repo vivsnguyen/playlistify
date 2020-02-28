@@ -15,7 +15,7 @@ header_info = {'Accept':'application/json',
 #*******************
 def spotify_authorization(username):
 
-    scope = 'playlist-modify-private playlist-modify-public user-read-private streaming user-read-email user-read-private'
+    scope = 'playlist-modify-private playlist-modify-public user-read-private streaming user-read-email user-modify-playback-state'
 
     token = spotipy.util.prompt_for_user_token(username, scope,
     client_id=os.environ['SPOTIPY_CLIENT_ID'],

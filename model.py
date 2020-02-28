@@ -112,6 +112,14 @@ def clear_data():
 
     db.session.commit()
 
+def delete_playlist(playlist_title, user_id):
+    user = User.query.get(user_id)
+    #get playlist obj by query playlist title
+    #check if playlist.user_id matches with session user_id else not authorized
+
+    db.session.delete(user.playlists[0])
+    db.session.commit()
+
 ##############################################################################
 # Helper functions
 
