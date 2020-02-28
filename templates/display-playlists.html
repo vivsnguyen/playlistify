@@ -8,6 +8,9 @@
     {% if playlists %}
         {% for playlist in playlists %}
             <h3> {{ playlist.playlist_title }} </h3>
+            <button id="prev-button">previous track</button>
+            <button id="pause-play-button">pause/play</button>
+            <button id="next-button">next track</button>
             {% for song in playlist.songs %}
               <li>
                 {{ song.song_name }}
@@ -20,6 +23,13 @@
                 <input type='hidden' name="playlist_title" value='{{ playlist.playlist_title }}' />
                 <input type="submit" value="Add playlist to Spotify?"/>
             </form>
+            <br>
+            <form action='/delete-playlist' method="POST">
+                <input type='hidden' name="playlist_title" value='{{ playlist.playlist_title }}' />
+                <input type="submit" value="Delete this playlist?"/>
+            </form>
+            <br>
+            <br>
         {% endfor %}
     {% endif %}
   </ul>

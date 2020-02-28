@@ -6,7 +6,7 @@ from jinja2 import StrictUndefined
 from flask import (Flask, render_template, redirect, request, flash, session, jsonify)
 from flask_debugtoolbar import DebugToolbarExtension
 
-from model import User, Artist, Song, Playlist, PlaylistSong, clear_data, connect_to_db, db
+from model import User, Artist, Song, Playlist, PlaylistSong, clear_data, delete_user_playlist, connect_to_db, db
 
 import spotipy
 
@@ -39,10 +39,9 @@ def spotify_account():
 @app.route('/spotify-authorize')
 def spotify_authorize():
     """"""
-    # del session["spotify username"]
-    # print('\n\n\n')
-    # print(session["spotify username"])
-    # print('\n\n\n')
+    if session.get("spotify username"):
+        del session["spotify username"]
+
     username = request.args.get('username')
     session['spotify username'] = username
     spotify_api.spotify_authorization(username)
@@ -91,12 +90,12 @@ def db_add_to_playlist():
 @app.route('/add-to-spotify-playlist', methods=["POST"])
 def add_to_spotify_playlist():
     """Adds playlist to spotify."""
-
+    user_id = session.get("user_id")
     playlist_title = request.form.get('playlist_title')
     spotify_username = session.get('spotify username')
 
     #check if token in session?
-    spotify_api.create_spotify_playlist_from_db(playlist_title, spotify_username)
+    spotify_api.create_spotify_playlist_from_db(user_id, playlist_title, spotify_username)
     #need to get spotify user_id, public or private?
     flash(f'Songs added successfully to {playlist_title} playlist on Spotify.')
     return redirect('/')
@@ -117,6 +116,17 @@ def clear_playlist():
 
     flash('All playlists deleted.')
     return redirect('/')
+
+@app.route('/delete-playlist', methods=["POST"])
+def delete_playlist():
+    """Deletes playlist from db."""
+    playlist_title = request.form.get('playlist_title')
+    user_id = session.get('user_id')
+
+    delete_user_playlist(playlist_title, user_id)
+
+    flash(f'Playlist {playlist_title} deleted.')
+    return redirect(f'/user-dashboard/{user_id}')
 
 @app.route("/log-in", methods=["GET"])
 def show_login_form():
@@ -226,7 +236,6 @@ def check_authorization(user_id):
 @app.route("/play-music")
 def play_music():
     """web sdk"""
-
 
     return render_template('music-player.html')
 

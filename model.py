@@ -75,7 +75,7 @@ class Playlist(db.Model):
     __tablename__ = "playlists"
 
     playlist_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    playlist_title = db.Column(db.String(80), unique=True, nullable=True)
+    playlist_title = db.Column(db.String(80), nullable=True)
 
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
 
@@ -110,6 +110,14 @@ def clear_data():
     Song.query.delete()
     Artist.query.delete()
 
+    db.session.commit()
+
+def delete_user_playlist(playlist_title, user_id):
+    """Delete a user's playlist."""
+    
+    playlist = Playlist.query.filter_by(playlist_title = playlist_title, user_id=user_id).first()
+
+    db.session.delete(playlist)
     db.session.commit()
 
 def delete_playlist(playlist_title, user_id):
