@@ -42,6 +42,16 @@ def create_playlist_on_spotify(playlist_title, user_id, public = False):
 
     response = requests.post(url,data=json.dumps(params_info),headers=header_info).json()
 
+    print('\n\n\n')
+    print('\n\n\n')
+    print('\n\n\n')
+    print('this is the response')
+    print(response)
+    print('\n\n\n')
+    print('\n\n\n')
+    print('\n\n\n')
+
+
     return response['id']
 
 def get_artist_id_by_artist_name(artist_name):

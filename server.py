@@ -39,7 +39,10 @@ def spotify_account():
 @app.route('/spotify-authorize')
 def spotify_authorize():
     """"""
-
+    # del session["spotify username"]
+    # print('\n\n\n')
+    # print(session["spotify username"])
+    # print('\n\n\n')
     username = request.args.get('username')
     session['spotify username'] = username
     spotify_api.spotify_authorization(username)
@@ -51,13 +54,16 @@ def spotify_authorize():
 @app.route('/display-playlists')
 def display_playlists():
     """Show playlists on page."""
-    #connect to USER ?????
-    if Playlist.query.first():
-    #check if playlists have a query
-        playlists = Playlist.query.all()
-        return render_template("display-playlists.html", playlists=playlists)
-    else:
-        return 'No playlists to display.'
+    user_id = session.get("user_id")
+    user = User.query.get(user_id)
+    #
+    # if Playlist.query.first():
+    # #check if playlists have a query
+    #     playlists = Playlist.query.all()
+    #     return render_template("display-playlists.html", playlists=playlists)
+    # else:
+    #     return 'No playlists to display.'
+    return render_template("display-playlists.html", playlists=user.playlists)
 
 
 @app.route('/add-to-playlist', methods=["GET"])
