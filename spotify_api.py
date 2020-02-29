@@ -82,9 +82,11 @@ def get_song_uri_by_song_name(song_name, artist_name):
 
     response = requests.get(url,params=params_info,headers=header_info).json()
 
+    artist_id = get_artist_id_by_artist_name(artist_name)
+
     if response['tracks']['items']:
         for i in range(len(response['tracks']['items'])):
-            if response['tracks']['items'][i]['artists'][0].get('name') == artist_name:
+            if response['tracks']['items'][i]['artists'][0].get('id') == artist_id:
                 return response['tracks']['items'][i]['uri']
             else:
                 continue
@@ -173,6 +175,11 @@ def start_user_playback(track_uris, device_id='11fcebde5061b2f96a395461dadd58c28
 
     response = requests.put(url, params=query_info,data=json.dumps(body_info),headers=header_info)
 
+def play_playlist_on_web_player(user_id, playlist_title):
+    """Play chosen playlist on web player."""
+    track_uris = get_track_uris_from_user_playlist(user_id, playlist_title)
+
+    start_user_playback(track_uris=track_uris)
 
 if __name__ == "__main__":
     connect_to_db(server.app)
