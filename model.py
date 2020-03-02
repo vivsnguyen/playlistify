@@ -104,17 +104,17 @@ class PlaylistSong(db.Model):
     def __repr__(self):
         return f"<PlaylistSong artist_id={self.artist_id} song_id={self.song_id}>"
 
-def clear_data():
-    PlaylistSong.query.delete()
-    Playlist.query.delete()
-    Song.query.delete()
-    Artist.query.delete()
-
-    db.session.commit()
+# def clear_data():
+#     PlaylistSong.query.delete()
+#     Playlist.query.delete()
+#     Song.query.delete()
+#     Artist.query.delete()
+#
+#     db.session.commit()
 
 def delete_user_playlist(playlist_title, user_id):
     """Delete a user's playlist."""
-    
+
     playlist = Playlist.query.filter_by(playlist_title = playlist_title, user_id=user_id).first()
 
     db.session.delete(playlist)

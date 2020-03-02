@@ -6,7 +6,8 @@ from jinja2 import StrictUndefined
 from flask import (Flask, render_template, redirect, request, flash, session, jsonify)
 from flask_debugtoolbar import DebugToolbarExtension
 
-from model import User, Artist, Song, Playlist, PlaylistSong, clear_data, delete_user_playlist, connect_to_db, db
+from model import User, Artist, Song, Playlist, PlaylistSong, delete_user_playlist, connect_to_db, db
+# clear_data
 
 import spotipy
 
