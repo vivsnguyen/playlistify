@@ -1,0 +1,18 @@
+
+{% extends "base.html" %}
+{% block content %}
+
+              <form action="/register" method="POST">
+                      <input type="text" required name="name" placeholder="Username">
+                      <input type="email" required name="email" placeholder="Email address">
+
+                      <input type="password" required name="password" placeholder="Password">
+
+                  <button type="submit" class="btn btn-primary">Register Now</button>
+              </form>
+              <p>Already registered?
+              <a href="/log-in">Click here to log in.</a></p>
+          </div>
+      </div>
+  </div>
+{% endblock %}

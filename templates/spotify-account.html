@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block content %}
+{% block title %} Spotify account {% endblock %}
+
+<form action = '/spotify-authorize' method="GET">
+    can I have your spotify account
+    <input type = "text" name = 'username'>
+    <input type = "submit">
+{% endblock %}

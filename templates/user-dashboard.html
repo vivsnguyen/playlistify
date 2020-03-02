@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %} {{ user.name }}'s Playlistify Dashboard {% endblock %}
+{% block content %}
+
+    <h1 id="welcome">
+        Welcome {{ user.name }}
+    </h1>
+
+    <a href="/add-to-playlist">Add to playlist</a>
+    <br><br>
+    <!-- <a href="/clear-playlists">Clear playlists</a>
+    <br><br> -->
+
+    <button id="display-playlists-button">View playlists</button>
+    <div id="playlists-display"></div>
+    <br><br>
+
+    {% block scripts %}
+    <script src="/static/displayPlaylists.js"></script>
+    <script src="https://sdk.scdn.co/spotify-player.js"></script>
+    <script src="/static/spotifyWebSDK.js"></script>
+    {% endblock %}
+
+{% endblock %}
