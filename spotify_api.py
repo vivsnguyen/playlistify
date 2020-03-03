@@ -84,12 +84,13 @@ def get_song_uri_by_song_name(song_name, artist_name):
 
     artist_id = get_artist_id_by_artist_name(artist_name)
 
-    if response['tracks']['items']:
-        for i in range(len(response['tracks']['items'])):
-            if response['tracks']['items'][i]['artists'][0].get('id') == artist_id:
-                return response['tracks']['items'][i]['uri']
-            else:
-                continue
+    if response.get('tracks'):
+        if response['tracks']['items']:
+            for i in range(len(response['tracks']['items'])):
+                if response['tracks']['items'][i]['artists'][0].get('id') == artist_id:
+                    return response['tracks']['items'][i]['uri']
+                else:
+                    continue
 
 def get_top_tracks_by_artist(spotify_artist_id):
     """Get the Spotify track URI's of an artist's top 5 tracks."""
