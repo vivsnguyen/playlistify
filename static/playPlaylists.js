@@ -3,12 +3,14 @@
 function playPlaylists(evt) {
     evt.preventDefault();
 
+    const formInput = {'playlist_title': $('input[name="playlist_title"]').val()}
 
-    $.put('/play-music', (response) => {
-        // need to get playlist title and user id
-        // BUT do I need it or can i run the server function??
-        // going to try on submit
+    // const playlistTitle = $('input[name="playlist_title"]').val();
+    // console.log(playlistTitle);
+
+    $(evt.target).siblings('.player-buttons').show();
+
+    $.get('/play-music', formInput, (response) => {
+      console.log(response);
     });
 }
-
-$('#choose-playlist-button').on('click', playPlaylists);

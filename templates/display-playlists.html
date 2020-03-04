@@ -8,14 +8,16 @@
     {% if playlists %}
         {% for playlist in playlists %}
             <h3> {{ playlist.playlist_title }} </h3>
-            <form action='/play-music' method="GET">
+            <form class="play-playlist" action='/play-music' method="GET">
                 <input type='hidden' name="playlist_title" value='{{ playlist.playlist_title }}' />
                 <input type="submit" value="Play this Playlist"/>
             </form>
             <br>
-            <button id="prev-button">previous track</button>
-            <button id="pause-play-button">pause/play</button>
-            <button id="next-button">next track</button>
+            <div class='player-buttons' style="display: none;">
+                <button class="prev-button" id="prev-{{ playlist.playlist_title }}">previous track</button>
+                <button class="pause-play-button">pause/play</button>
+                <button class="next-button">next track</button>
+            </div>
             {% for song in playlist.songs %}
               <li>
                 {{ song.song_name }}
@@ -40,10 +42,5 @@
   </ul>
 
   {% block logout %}{% endblock %}
-  {% block scripts %}
-  <script src="https://sdk.scdn.co/spotify-player.js"></script>
-  <script src="/static/spotifyWebSDK.js"></script>
-  <script src="/static/playPlaylists.js"></script>
-  {% endblock %}
 
 {% endblock %}

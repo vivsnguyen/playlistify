@@ -236,13 +236,18 @@ def check_authorization(user_id):
 
 @app.route("/play-music")
 def play_music():
-    """web sdk"""
-    #get playlist playlist_title
+    """web player"""
     user_id = session.get("user_id")
-    playlist_title = request.form.get('playlist_title')
+    playlist_title = request.args.get('playlist_title')
+
+    print('\n\n\n\nserver')
+    print(playlist_title)
 
     spotify_api.play_playlist_on_web_player(user_id, playlist_title)
-    # return render_template('music-player.html')
+
+    return f'Playing playlist {playlist_title} on Spotify.'
+
+
 
 
 if __name__ == "__main__":

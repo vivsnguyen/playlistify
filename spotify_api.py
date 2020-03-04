@@ -59,6 +59,7 @@ def get_artist_id_by_artist_name(artist_name):
     params_info = {'q': artist_name, 'type' : 'artist'}
     response = requests.get(url,params=params_info,headers=header_info).json()
 
+
     if response['artists']['items']:
         spotify_artist_id = response['artists']['items'][0]['id'] #['artists']['items'][0] gives first search result
     else:
@@ -175,6 +176,7 @@ def start_user_playback(track_uris, device_id='11fcebde5061b2f96a395461dadd58c28
     body_info = {'uris' : track_uris}
 
     response = requests.put(url, params=query_info,data=json.dumps(body_info),headers=header_info)
+
 
 def play_playlist_on_web_player(user_id, playlist_title):
     """Play chosen playlist on web player."""
