@@ -8,15 +8,15 @@
     {% if playlists %}
         {% for playlist in playlists %}
             <h3> {{ playlist.playlist_title }} </h3>
-            <form class="play-playlist" action='/play-music' method="GET">
+            <form class="play-playlist" id="{{ playlist.playlist_title }}"action='/play-music' method="GET">
                 <input type='hidden' name="playlist_title" value='{{ playlist.playlist_title }}' />
                 <input type="submit" value="Play this Playlist"/>
             </form>
             <br>
             <div class='player-buttons' style="display: none;">
                 <button class="prev-button" id="prev-{{ playlist.playlist_title }}">previous track</button>
-                <button class="pause-play-button">pause/play</button>
-                <button class="next-button">next track</button>
+                <button class="pause-play-button" id="pause-play-{{ playlist.playlist_title }}">pause/play</button>
+                <button class="next-button" id="next-{{ playlist.playlist_title }}">next track</button>
             </div>
             {% for song in playlist.songs %}
               <li>

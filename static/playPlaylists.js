@@ -6,7 +6,7 @@ function playPlaylists(evt) {
     const formInput = {'playlist_title': $('input[name="playlist_title"]').val()}
 
     // const playlistTitle = $('input[name="playlist_title"]').val();
-    // console.log(playlistTitle);
+    console.log(formInput);
 
     $(evt.target).siblings('.player-buttons').show();
 
