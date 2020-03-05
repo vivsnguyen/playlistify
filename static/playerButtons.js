@@ -4,5 +4,6 @@ $('button.player-buttons').on('click', (evt) => {
   const buttonId = button.attr('id');
 
   // $('body').css('fontFamily', buttonId);
-  
+  //  $('buttonId.prev-button').on('click', clickPreviousTrack);
+
 });

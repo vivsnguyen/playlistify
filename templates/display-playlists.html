@@ -9,7 +9,6 @@
         {% for playlist in playlists %}
             <h3> {{ playlist.playlist_title }} </h3>
             <form class="play-playlist" id="{{ playlist.playlist_title }}"action='/play-music' method="GET">
-                <input type='hidden' name="playlist_title" value='{{ playlist.playlist_title }}' />
                 <input type="submit" value="Play this Playlist"/>
             </form>
             <br>
