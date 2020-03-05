@@ -42,8 +42,9 @@ def create_playlist_on_spotify(playlist_title, spotify_username, public = False)
 
     response = requests.post(url,data=json.dumps(params_info),headers=header_info).json()
 
+    spotify_playlist_id = response['id']
 
-    return response['id']
+    return spotify_playlist_id
 
 def get_artist_id_by_artist_name(artist_name):
     """
@@ -160,7 +161,7 @@ def create_spotify_playlist_from_db(user_id, playlist_title, spotify_username):
 
     track_uris = get_track_uris_from_user_playlist(user_id, playlist_title)
 
-    # adjust_length_playlist(spotify_artist_id, filtered_track_uris)
+    adjust_length_playlist(spotify_artist_id, filtered_track_uris)
 
     add_tracks_to_spotify_playlist(track_uris, playlist_id)
 

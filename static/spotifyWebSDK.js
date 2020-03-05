@@ -1,7 +1,7 @@
 "use strict";
 
 window.onSpotifyWebPlaybackSDKReady = () => {
-  const token = 'BQCqEDjuZUBjXM2gqAu1U_kGftrlCPmGwevOz-9WbE2ODYqBxoG02p-MoSd1CWO33TWozL4Xu_kABKg5UL46687s_tTAfN_9Y0XflXY4vEDLMCMomKf81hkJ3Unlp0FcZ0JLr9homNh30ZNbC3sCNvPTNR9vjJqH';
+  const token = 'BQDLG3WTk9czN8Bm64PbS7gJxghk_ukQXaSaWGDORkWcQAhMbBddfEKR54W-11EFS8xV00Cs7aOpNpIGDhy-AaxWt6uIeVrgrCykfo2_begylpaG_MX1bs-jO5RRqELaWS9dQEFF8UJSWlL_rL4K4yo1P2BP72Zz';
   const player = new Spotify.Player({
     name: 'Playlist Web Player thingy',
     getOAuthToken: cb => { cb(token); }
@@ -26,13 +26,15 @@ window.onSpotifyWebPlaybackSDKReady = () => {
     console.log('Device ID has gone offline', device_id);
   });
 
-  //pause button
+  // pause button
   function clickToPauseOrPlay(evt) {
-    player.togglePlay().then(() => {
+    player.togglePlay()
     console.log('Toggled playback!');
-    });
+    // });
   }
-  $('.pause-play-button').on('click', clickToPauseOrPlay);
+  // $('#pause-play-button').on('click', clickToPauseOrPlay);
+
+  $('button.pause-play-button').on('click', clickToPauseOrPlay);
 
   //next track button
   function clickNextTrack(evt) {

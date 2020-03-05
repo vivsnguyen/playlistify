@@ -12,7 +12,9 @@
                 <input type="submit" value="Play this Playlist"/>
             </form>
             <br>
-            <div class='player-buttons' style="display: none;">
+            <div id='now-playing-{{ playlist.playlist_title }}'></div>
+            <br>
+            <div class='player-buttons' id="player-buttons-{{ playlist.playlist_title }}" style="display: none;">
                 <button class="prev-button" id="prev-{{ playlist.playlist_title }}">previous track</button>
                 <button class="pause-play-button" id="pause-play-{{ playlist.playlist_title }}">pause/play</button>
                 <button class="next-button" id="next-{{ playlist.playlist_title }}">next track</button>
