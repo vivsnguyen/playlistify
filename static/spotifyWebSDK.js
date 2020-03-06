@@ -1,7 +1,7 @@
 "use strict";
 
 window.onSpotifyWebPlaybackSDKReady = () => {
-  const token = 'BQDLG3WTk9czN8Bm64PbS7gJxghk_ukQXaSaWGDORkWcQAhMbBddfEKR54W-11EFS8xV00Cs7aOpNpIGDhy-AaxWt6uIeVrgrCykfo2_begylpaG_MX1bs-jO5RRqELaWS9dQEFF8UJSWlL_rL4K4yo1P2BP72Zz';
+  const token = 'BQCBmY8hfzyS-MMVlm2dkedpAjk6VQI0-rekDF6F3BD0d3EBGaU7IINZ5TNEjdm0sECOtI9owIwEOhoGImxux1v9U-opGRk3g5r0wjLwDT40_ieu4F0y6RTpgpJvDdpp01Uf2KuHzgmy3ZX6YEj2Yq5kMxF6-2LZ';
   const player = new Spotify.Player({
     name: 'Playlist Web Player thingy',
     getOAuthToken: cb => { cb(token); }
@@ -38,11 +38,15 @@ window.onSpotifyWebPlaybackSDKReady = () => {
 
   //next track button
   function clickNextTrack(evt) {
+      
       player.nextTrack().then(() => {
           console.log('Skipped to next track!');
       });
   }
-  $('.next-button').on('click', clickNextTrack);
+
+  // $('.next-button').on('click', clickNextTrack);
+
+   $('button.next-button').on('click', clickNextTrack);
 
   //previous track button
   function clickPreviousTrack(evt) {
@@ -50,7 +54,9 @@ window.onSpotifyWebPlaybackSDKReady = () => {
           console.log('Set to previous track!');
       });
   }
-  $('.prev-button').on('click', clickPreviousTrack);
+  // $('.prev-button').on('click', clickPreviousTrack);
+
+  $('button.prev-button').on('click', clickPreviousTrack);
 
   // Start/Resume a User's Playback
 

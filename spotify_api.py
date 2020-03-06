@@ -161,7 +161,7 @@ def create_spotify_playlist_from_db(user_id, playlist_title, spotify_username):
 
     track_uris = get_track_uris_from_user_playlist(user_id, playlist_title)
 
-    adjust_length_playlist(spotify_artist_id, filtered_track_uris)
+    # adjust_length_playlist(spotify_artist_id, filtered_track_uris)
 
     add_tracks_to_spotify_playlist(track_uris, playlist_id)
 

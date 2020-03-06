@@ -238,16 +238,14 @@ def check_authorization(user_id):
 def play_music():
     """web player"""
     user_id = session.get("user_id")
-    playlist_title = request.args.get('playlist_title')
+    playlist_id = request.args.get('playlist_id')
+    playlist = Playlist.query.get(playlist_id)
 
-    print('\n\n\n\nserver')
-    print(playlist_title)
+    spotify_api.play_playlist_on_web_player(user_id, playlist.playlist_title)
 
-    spotify_api.play_playlist_on_web_player(user_id, playlist_title)
+    return f'Playing playlist {playlist.playlist_title} on Spotify.'
 
-    return f'Playing playlist {playlist_title} on Spotify.'
-
-#@spotify-callback
+# @app.route("/spotify-callback")
 
 
 
