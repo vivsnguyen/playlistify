@@ -2,6 +2,11 @@
 import os
 import requests
 import json
+import sys
+import base64
+
+from flask import request, flash, session
+
 from sqlalchemy import func
 from model import User, Artist, Song, Playlist, PlaylistSong
 from model import connect_to_db, db
@@ -11,23 +16,100 @@ import spotipy
 header_info = {'Accept':'application/json',
     'Content-Type': 'application/json'}
 
+# Client keys
+SPOTIFY_CLIENT_ID=os.environ['SPOTIPY_CLIENT_ID']
+SPOTIFY_CLIENT_SECRET=os.environ['SPOTIPY_CLIENT_SECRET']
+SPOTIFY_REDIRECT_URI='http://localhost:5000/spotify-callback'
 
+# Spotify URLs
+SPOTIFY_API_BASE_URL = 'https://api.spotify.com'
+SPOTIFY_AUTH_URL = 'https://accounts.spotify.com/authorize'
+SPOTIFY_TOKEN_URL = 'https://accounts.spotify.com/api/token'
+SPOTIFY_API_VERSION = 'v1'
+SPOTIFY_API_URL = f'{SPOTIFY_API_BASE_URL}/{SPOTIFY_API_VERSION}'
+
+SPOTIFY_SCOPE = 'playlist-modify-private playlist-modify-public user-read-private streaming user-read-email user-library-read user-modify-playback-state'
+
+auth_query_param = {
+    'response_type': 'code',
+    'redirect_uri': SPOTIFY_REDIRECT_URI,
+    'scope': SPOTIFY_SCOPE,
+    'client_id': SPOTIFY_CLIENT_ID
+}
+
+def generate_auth_url():
+    """ Returns user authorization url.
+    Used in '/spotify-login' route. """
+
+    spotify_auth_url = (SPOTIFY_AUTH_URL + '?client_id=' + auth_query_param['client_id'] +
+                        '&response_type=' + auth_query_param['response_type'] +
+                        '&redirect_uri=' + auth_query_param['redirect_uri'] +
+                        '&scope=' + auth_query_param['scope'])
+
+    return spotify_auth_url
+
+def get_auth_token():
+    """ Returns authorization token from Spotify.
+    Used in '/spotify-callback' route. """
+
+    auth_code = request.args['code']
+
+    code_payload = {
+        "grant_type": "authorization_code",
+        "code": str(auth_code),
+        "redirect_uri": SPOTIFY_REDIRECT_URI
+    }
+
+    base64encoded = base64.b64encode(("{}:{}".format(SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET)).encode())
+    headers = {"Authorization": "Basic {}".format(base64encoded.decode())}
+
+    post_request = requests.post(SPOTIFY_TOKEN_URL, data=code_payload, headers=headers)
+
+    return post_request.json()
+
+def get_new_auth_token(refresh_token):
+    """ Takes in refresh token from exisiting user to generate a new authorization token. """
+
+    code_payload = {
+            'grant_type': 'refresh_token',
+            'refresh_token': refresh_token
+        }
+
+    base64encoded = base64.b64encode(("{}:{}".format(SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET)).encode())
+    headers = {"Authorization": "Basic {}".format(base64encoded.decode())}
+
+    post_request = requests.post(SPOTIFY_TOKEN_URL, data=code_payload, headers=headers)
+
+    return post_request.json()
+
+def auth_header(token):
+    """Sets header dict to include Spotify's authorization token. """
+    header_info["Authorization"] = f"Bearer {token}"
+
+def get_spotify_user_id():
+    """ Return user's spotify ID.  """
+
+    request = "{}/{}".format(SPOTIFY_API_URL, 'me')
+    user_info = requests.get(request, headers=header_info).json()
+    spotify_user_id = user_info['id']
+
+    return spotify_user_id
 #*******************
-def spotify_authorization(username):
-
-    scope = 'playlist-modify-private playlist-modify-public user-read-private streaming user-read-email user-modify-playback-state'
-
-    token = spotipy.util.prompt_for_user_token(username, scope,
-    client_id=os.environ['SPOTIPY_CLIENT_ID'],
-    client_secret=os.environ['SPOTIPY_CLIENT_SECRET'],
-    redirect_uri=os.environ['SPOTIPY_REDIRECT_URI'])
-
-    if token:
-        header_info['Authorization'] = f'Bearer {token}'
-        sp = spotipy.Spotify(auth=token)
-        return token
-    else:
-        print("Can't get token for", username)
+# def spotify_authorization(username):
+#
+#     scope = 'playlist-modify-private playlist-modify-public user-read-private streaming user-read-email user-modify-playback-state'
+#
+#     token = spotipy.util.prompt_for_user_token(username, scope,
+#     client_id=os.environ['SPOTIPY_CLIENT_ID'],
+#     client_secret=os.environ['SPOTIPY_CLIENT_SECRET'],
+#     redirect_uri=os.environ['SPOTIPY_REDIRECT_URI'])
+#
+#     if token:
+#         header_info['Authorization'] = f'Bearer {token}'
+#         sp = spotipy.Spotify(auth=token)
+#         return token
+#     else:
+#         print("Can't get token for", username)
 #********************
 
 def create_playlist_on_spotify(playlist_title, spotify_username, public = False):
@@ -129,18 +211,33 @@ def get_track_uris_from_user_playlist(user_id, playlist_title):
 
     return filtered_track_uris
 
+def get_spotify_artist_id_from_track_uri(track_uri):
+    """(helper function for adjust_length_playlist)"""
 
-def adjust_length_playlist(spotify_artist_id, filtered_track_uris):
+    id = track_uri[14:]
+    url = f'https://api.spotify.com/v1/tracks/{id}'
+
+    response = requests.get(url,headers=header_info).json()
+
+    spotify_artist_id = response['artists'][0]['id']
+
+    return spotify_artist_id
+
+#FIX********
+def adjust_length_playlist(filtered_track_uris):
     """If setlist songs < 10, add artist's top tracks uri's."""
+
     new_playlist = list(filtered_track_uris)
     if len(filtered_track_uris) < 10:
+        #this assumes that all tracks on list from same artist
+        spotify_artist_id = get_spotify_artist_id_from_track_uri(filtered_track_uris[0])
         top_tracks_uris = get_top_tracks_by_artist(spotify_artist_id)
 
         for track in top_tracks_uris:
             new_playlist.append(track)
 
     return new_playlist
-
+#*******************
 
 def add_tracks_to_spotify_playlist(track_uris, playlist_id):
     """Adds songs to Spotify playlist via POST request."""
@@ -153,17 +250,20 @@ def add_tracks_to_spotify_playlist(track_uris, playlist_id):
 
     return response
 
-def create_spotify_playlist_from_db(user_id, playlist_title, spotify_username):
+def create_spotify_playlist_from_db(user_id, playlist_title, token):
     """Process of creating playlist on spotify from db playlist."""
 
+    auth_header(token)
+
+    spotify_username = get_spotify_user_id()
 
     playlist_id = create_playlist_on_spotify(playlist_title, spotify_username=spotify_username, public = False)
 
     track_uris = get_track_uris_from_user_playlist(user_id, playlist_title)
 
-    # adjust_length_playlist(spotify_artist_id, filtered_track_uris)
+    adjusted_playlist_uris = adjust_length_playlist(track_uris)
 
-    add_tracks_to_spotify_playlist(track_uris, playlist_id)
+    add_tracks_to_spotify_playlist(adjusted_playlist_uris, playlist_id)
 
 def start_user_playback(track_uris, device_id='11fcebde5061b2f96a395461dadd58c28b6a704e'):
     """Start/Resume a Spotify user's Playback."""
@@ -179,8 +279,10 @@ def start_user_playback(track_uris, device_id='11fcebde5061b2f96a395461dadd58c28
     response = requests.put(url, params=query_info,data=json.dumps(body_info),headers=header_info)
 
 
-def play_playlist_on_web_player(user_id, playlist_title):
+def play_playlist_on_web_player(user_id, playlist_title, token):
     """Play chosen playlist on web player."""
+    auth_header(token)
+
     track_uris = get_track_uris_from_user_playlist(user_id, playlist_title)
 
     start_user_playback(track_uris=track_uris)

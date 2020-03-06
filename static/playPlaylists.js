@@ -14,6 +14,7 @@ function playPlaylists(evt) {
 
     playerButtons.hide();
     $(evt.target).siblings(`#player-buttons-${playlistId}`).show();
+
     // $(evt.target).siblings('.player-buttons').show();
 
     const nowPlaying = $(evt.target).siblings('.now-playing');

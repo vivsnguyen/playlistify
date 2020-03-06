@@ -7,6 +7,7 @@ function showPlaylists(evt) {
       $('#playlists-display').html(response);
       $('.play-playlist').on('submit', playPlaylists);
     });
+    
 }
 
 // $( "#display-playlists-button" ).click(function() {

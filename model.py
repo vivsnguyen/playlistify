@@ -112,6 +112,25 @@ class PlaylistSong(db.Model):
 #
 #     db.session.commit()
 
+def example_data():
+    """Create some sample data."""
+
+    # In case this is run more than once, empty out existing data
+    PlaylistSong.query.delete()
+    Playlist.query.delete()
+    Song.query.delete()
+    Artist.query.delete()
+    User.query.delete()
+
+    # Add sample data
+
+    artist = Artist(artist_name='boy pablo')
+    user = User(name='vivivi.n', email='vivi@vivi.com', password_hash='hello')
+    playlist = Playlist(playlist_title='party time')
+
+    db.session.add_all([artist, user,playlist])
+    db.session.commit()
+
 def delete_user_playlist(playlist_title, user_id):
     """Delete a user's playlist."""
 

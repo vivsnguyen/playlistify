@@ -32,37 +32,54 @@ def index():
 
     return render_template("homepage.html")
 
-@app.route('/spotify-account')
-def spotify_account():
-    return render_template("spotify-account.html")
+#************************************************
+#Spotify Authorization
+# @app.route('/spotify-account')
+# def spotify_account():
+#     return render_template("spotify-account.html")
 
-#**********************
-@app.route('/spotify-authorize')
-def spotify_authorize():
-    """"""
-    if session.get("spotify username"):
-        del session["spotify username"]
+# @app.route('/spotify-authorize')
+# def spotify_authorize():
+#     """"""
+#     if session.get("spotify username"):
+#         del session["spotify username"]
+#
+#     username = request.args.get('username')
+#     session['spotify username'] = username
+#     spotify_api.spotify_authorization(username)
+#
+#     return redirect('/') #??????
 
-    username = request.args.get('username')
-    session['spotify username'] = username
-    spotify_api.spotify_authorization(username)
+@app.route('/spotify-login')
+def spotify_login():
+    """ Spotify Authorization Page """
 
-    return redirect('/') #??????
-#************************
 
+    spotify_auth_url = spotify_api.generate_auth_url()
+    print('\n\n\n\n')
+    print(spotify_auth_url)
+
+    return redirect(str(spotify_auth_url))
+
+@app.route('/spotify-callback')
+def spotify_callback():
+    spotify_response_data = spotify_api.get_auth_token()
+    session['access_token'] = spotify_response_data.get('access_token')
+    session['refresh_token'] = spotify_response_data.get('refresh_token')
+
+    print(session.items())
+
+    return render_template('display-tokens.html')
+    #change later!!!!!!!!
+
+#************************************************
 
 @app.route('/display-playlists')
 def display_playlists():
     """Show playlists on page."""
     user_id = session.get("user_id")
     user = User.query.get(user_id)
-    #
-    # if Playlist.query.first():
-    # #check if playlists have a query
-    #     playlists = Playlist.query.all()
-    #     return render_template("display-playlists.html", playlists=playlists)
-    # else:
-    #     return 'No playlists to display.'
+
     return render_template("display-playlists.html", playlists=user.playlists)
 
 
@@ -96,10 +113,12 @@ def add_to_spotify_playlist():
     spotify_username = session.get('spotify username')
 
     #check if token in session?
-    spotify_api.create_spotify_playlist_from_db(user_id, playlist_title, spotify_username)
+    token = session.get('access_token')
+
+    spotify_api.create_spotify_playlist_from_db(user_id, playlist_title, spotify_username, token)
     #need to get spotify user_id, public or private?
     flash(f'Songs added successfully to {playlist_title} playlist on Spotify.')
-    return redirect('/')
+    return redirect(f'/user-dashboard/{user_id}')
 #************************************
 
 
@@ -200,9 +219,8 @@ def process_user_registration():
 def logout():
     """Log out of a user account."""
 
-    if session.get("user_id"):
-        del session["user_id"]
-        flash("Logout successful.")
+    session.clear()
+    flash("Logout successful.")
 
     return redirect("/")
 
@@ -241,11 +259,13 @@ def play_music():
     playlist_id = request.args.get('playlist_id')
     playlist = Playlist.query.get(playlist_id)
 
-    spotify_api.play_playlist_on_web_player(user_id, playlist.playlist_title)
+    token = session.get('access_token')
+
+    spotify_api.play_playlist_on_web_player(user_id, playlist.playlist_title, token)
 
     return f'Playing playlist {playlist.playlist_title} on Spotify.'
 
-# @app.route("/spotify-callback")
+
 
 
 

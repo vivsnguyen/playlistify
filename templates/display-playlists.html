@@ -3,7 +3,7 @@
 {% block title %}{% endblock %}
 {% block homepage %}{% endblock %}
 <h2>My playlists</h2>
-
+  <div id=token value="{{ session['access_token'] }}" style="display: none;"></div>
   <ul>
     {% if playlists %}
         {% for playlist in playlists %}
@@ -43,5 +43,6 @@
   </ul>
 
   {% block logout %}{% endblock %}
-
+  <script src="https://sdk.scdn.co/spotify-player.js"></script>
+  <script src="/static/spotifyWebSDK.js"></script>
 {% endblock %}
