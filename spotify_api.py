@@ -28,7 +28,7 @@ SPOTIFY_TOKEN_URL = 'https://accounts.spotify.com/api/token'
 SPOTIFY_API_VERSION = 'v1'
 SPOTIFY_API_URL = f'{SPOTIFY_API_BASE_URL}/{SPOTIFY_API_VERSION}'
 
-SPOTIFY_SCOPE = 'playlist-modify-private playlist-modify-public user-read-private streaming user-read-email user-library-read user-modify-playback-state'
+SPOTIFY_SCOPE = 'playlist-modify-private playlist-modify-public user-read-private streaming user-read-email user-library-read user-modify-playback-state user-read-playback-state'
 
 auth_query_param = {
     'response_type': 'code',
@@ -265,7 +265,22 @@ def create_spotify_playlist_from_db(user_id, playlist_title, token):
 
     add_tracks_to_spotify_playlist(adjusted_playlist_uris, playlist_id)
 
-def start_user_playback(track_uris, device_id='11fcebde5061b2f96a395461dadd58c28b6a704e'):
+def get_user_devices():
+    url = f'{SPOTIFY_API_URL}/me/player/devices'
+
+    response = requests.get(url,headers=header_info).json()
+
+    devices_list = response['devices']
+
+    for device in devices_list:
+        if device['name'] == 'Playlist Web Player thingy':
+            web_device_id = device['id']
+        else:
+            web_device_id = None
+
+    return web_device_id
+
+def start_user_playback(track_uris, device_id):
     """Start/Resume a Spotify user's Playback."""
 
 
@@ -283,9 +298,11 @@ def play_playlist_on_web_player(user_id, playlist_title, token):
     """Play chosen playlist on web player."""
     auth_header(token)
 
+    device_id = get_user_devices()
+
     track_uris = get_track_uris_from_user_playlist(user_id, playlist_title)
 
-    start_user_playback(track_uris=track_uris)
+    start_user_playback(track_uris=track_uris, device_id=device_id)
 
 if __name__ == "__main__":
     connect_to_db(server.app)

@@ -8,7 +8,12 @@
 
 {% block homepage %}{% endblock %}
 
-<a href="/spotify-login">Connect to Spotify</a>
+{% if 'access_token' in session %}
+    Spotify account connected.
+{% else %}
+    <a href="/spotify-login">Connect to Spotify</a>
+
+{% endif %}
 <br><br>
 
 <!-- <a href="/play-music">play music</a>

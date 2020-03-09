@@ -21,7 +21,16 @@
             {% endfor %}
         {% endif %}
     {% endwith %}
+    {% if 'access_token' in session %}
 
+    <script type="text/javascript">
+    console.log("SCRIPT")
+      let token = {{ session['access_token'] | tojson }};
+      console.log(token);
+      // console.log(window.appConfig.token, "TOKEN")
+    </script>
+
+    {% endif %}
 </head>
 
 <body>
@@ -39,5 +48,6 @@
 {% block scripts %}
 
 {% endblock %}
+
 </body>
 </html>

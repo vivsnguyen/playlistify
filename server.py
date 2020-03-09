@@ -69,8 +69,8 @@ def spotify_callback():
 
     print(session.items())
 
-    return render_template('display-tokens.html')
-    #change later!!!!!!!!
+    #return render_template('display-tokens.html')
+    return redirect('/')
 
 #************************************************
 
@@ -227,7 +227,7 @@ def logout():
 
 @app.route("/user-dashboard/<int:user_id>")
 def show_user_dashboard(user_id):
-    """Show a user's dashboard where they can view and edit playlists. ????????"""
+    """Show a user's dashboard where they can view and play playlists."""
 
     if check_authorization(user_id):
         user = User.query.get(user_id)

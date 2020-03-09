@@ -1,9 +1,11 @@
 "use strict";
 
 window.onSpotifyWebPlaybackSDKReady = () => {
-  const token = $('#token').val();
-  console.log(token)
-  // const token = 'BQBfk_C3zGAsXQXeUFSragY-VVlFgAN_m0s_Q46MGuzZaoo6wPpSx6ZyytFvYkqk9NjAR49siZYl3dz5833WQqod-HLdNjV4IZaZAd33QtOFIja5P9bxJKoghj8c1zaHAoR05ulXs6MPSiXIr-9rLSwO7QscxSxl';
+  // const token = $('#token').val();
+  // token = window.appConfig.token;
+
+  console.log(`this is the token: ${token}`)
+
   const player = new Spotify.Player({
     name: 'Playlist Web Player thingy',
     getOAuthToken: cb => { cb(token); }
@@ -68,4 +70,3 @@ window.onSpotifyWebPlaybackSDKReady = () => {
   // Connect to the player!
   player.connect();
 };
-console.log($('.button.pause-play-button'));
