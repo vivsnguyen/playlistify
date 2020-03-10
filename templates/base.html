@@ -1,17 +1,48 @@
 <!doctype html>
 <html>
 <head>
-    <!-- bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-
-    <!-- my css  -->
-    <link rel="stylesheet" href="/static/style.css">
-
     <!-- jQuery  -->
     <script
     src="https://code.jquery.com/jquery-3.4.1.js"
     integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
     crossorigin="anonymous"></script>
+
+    <!-- bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <!-- font -->
+    <link href="https://fonts.googleapis.com/css?family=Sen&display=swap" rel="stylesheet">
+
+    <!-- my css  -->
+    <link rel="stylesheet" href="/static/style.css">
+
+    {% block navbar %}
+    <!-- <nav class="navbar navbar-light bg-light">
+      <a class="navbar-brand" href="/">
+        <img src="/images/logo.png" width="30" height="30" alt="">
+        Playlistify
+      </a>
+    </nav> -->
+        <nav class="navbar navbar-expand-lg navbar-light">
+        <a class="navbar-brand" href="/">Playlistify</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item active">
+                <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                {% if session.get("user_id") %}
+                    <a class="nav-link" href="/user-dashboard/{{ session['user_id'] }}">My Dashboard</a>
+                    </li>
+                {% endif %}
+            </li>
+            </ul>
+        </div>
+        </nav>
+    {% endblock %}
 
   <title>{% block title %} TITLE HERE {% endblock %}</title>
     {% with messages = get_flashed_messages() %}
@@ -21,33 +52,36 @@
             {% endfor %}
         {% endif %}
     {% endwith %}
+
     {% if 'access_token' in session %}
-
-    <script type="text/javascript">
-    console.log("SCRIPT")
-      let token = {{ session['access_token'] | tojson }};
-      console.log(token);
-      // console.log(window.appConfig.token, "TOKEN")
-    </script>
-
+        <script type="text/javascript">
+        console.log("SCRIPT")
+          let token = {{ session['access_token'] | tojson }};
+          console.log(token);
+          // console.log(window.appConfig.token, "TOKEN")
+        </script>
     {% endif %}
+
 </head>
 
 <body>
-  {% block homepage %} <a href="/">HOMEPAGE</a> <br> {% endblock %}
-
   {% block content %} put your content here {% endblock %}
 
   {% block logout %}
     {% if session.get("user_id") %}
-        <a href="/logout">LOGOUT</a>
-    {% else %}
-        <a href="/log-in">User Log-in</a>
+        <form action="/logout">
+            <input type="submit" value="LOGOUT" />
+        </form>
     {% endif %}
   {% endblock %}
 {% block scripts %}
 
 {% endblock %}
+
+<!-- bootstrap js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 
 </body>
 </html>

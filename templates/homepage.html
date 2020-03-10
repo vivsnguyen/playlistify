@@ -1,28 +1,40 @@
 {% extends 'base.html' %}
 {% block content %}
-{% block title %} Playlistify {% endblock %}
+{% block title %}Playlistify{% endblock %}
 
-<h1>Homepage</h1>
+<img src="./images/logo.png">
 
 <p>Playlistify generates a playlist from your favorite artists' setlists and top songs.</p>
 
 {% block homepage %}{% endblock %}
 
-{% if 'access_token' in session %}
-    Spotify account connected.
+{% if session.get("access_token") %}
+        Spotify account connected.
 {% else %}
-    <a href="/spotify-login">Connect to Spotify</a>
+
+        <form action="/spotify-login">
+            <input type="submit" value="Connect to Spotify" />
+        </form>
 
 {% endif %}
+
+{% if session.get("access_token") %}
+    {% if not session.get("user_id") %}
+        <form action="/log-in">
+            <input type="submit" value="User Log-in" />
+        </form>
+    {% endif %}
+{% endif %}
+
 <br><br>
 
 <!-- <a href="/play-music">play music</a>
 <br><br> -->
 
-{% if session.get("user_id") %}
+<!-- {% if session.get("user_id") %}
     <a href="/user-dashboard/{{ session.get("user_id") }}">My Dashboard</a>
 {% endif %}
-<br><br>
+<br><br> -->
 
 
 {% endblock %}

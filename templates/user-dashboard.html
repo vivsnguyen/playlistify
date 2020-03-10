@@ -6,20 +6,24 @@
         Welcome {{ user.name }}
     </h1>
 
-    <a href="/add-to-playlist">Add to playlist</a>
-    <br><br>
+    <form action="/add-to-playlist">
+        <button type="submit"> Add to playlist </button>
+    </form>
+    <br>
+
     <!-- <a href="/clear-playlists">Clear playlists</a>
     <br><br> -->
 
     <button id="display-playlists-button">View playlists</button>
     <div id="playlists-display"></div>
-    <br><br>
+    <br>
+
 
     {% block scripts %}
     <script src="/static/playPlaylists.js"></script>
     <script src="/static/displayPlaylists.js"></script>
     <script src="/static/playerButtons.js"></script>
-    
+
     <!-- web player authentication fails if not here -->
     <!-- <script src="https://sdk.scdn.co/spotify-player.js"></script>
     <script src="/static/spotifyWebSDK.js"></script> -->
