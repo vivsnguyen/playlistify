@@ -1,40 +1,56 @@
 {% extends 'base.html' %}
 {% block content %}
+<div style="display:none;">
 {% block title %}Playlistify{% endblock %}
+</div>
 
-<img src="./images/logo.png">
+<div class="homepage-container">
+    <div class="homepage">
 
-<p>Playlistify generates a playlist from your favorite artists' setlists and top songs.</p>
+        <img src="static/images/logo.png">
 
-{% block homepage %}{% endblock %}
+        <p>Playlistify generates a playlist from your favorite artists' setlists and top songs.</p>
 
-{% if session.get("access_token") %}
-        Spotify account connected.
-{% else %}
+        {% block homepage %}{% endblock %}
 
-        <form action="/spotify-login">
-            <input type="submit" value="Connect to Spotify" />
-        </form>
+        <div class="fullscreen-bg">
+            <video loop muted autoplay poster="static/images/Live-Music.jpg" class="fullscreen-bg__video">
+                <source src="static/video/Live-Music.mp4" type="video/mp4">
+            </video>
+        </div>
 
-{% endif %}
+        {% if session.get("access_token") %}
+                <h3>Spotify account connected.</h3>
+        {% else %}
 
-{% if session.get("access_token") %}
-    {% if not session.get("user_id") %}
-        <form action="/log-in">
-            <input type="submit" value="User Log-in" />
-        </form>
-    {% endif %}
-{% endif %}
+                <form action="/spotify-login">
+                    <button type="submit" class="btn btn-primary"> Connect to Spotify </button>
+                </form>
 
-<br><br>
+        {% endif %}
 
-<!-- <a href="/play-music">play music</a>
-<br><br> -->
+        <br>
 
-<!-- {% if session.get("user_id") %}
-    <a href="/user-dashboard/{{ session.get("user_id") }}">My Dashboard</a>
-{% endif %}
-<br><br> -->
+        {% if session.get("access_token") %}
+            {% if not session.get("user_id") %}
+                <form action="/log-in">
+                    <button type="submit" class="btn btn-primary"> User Log-In </button>
+                </form>
+            {% endif %}
+        {% endif %}
+
+        <br><br>
+
+        <!-- <a href="/play-music">play music</a>
+        <br><br> -->
+
+        <!-- {% if session.get("user_id") %}
+            <a href="/user-dashboard/{{ session.get("user_id") }}">My Dashboard</a>
+        {% endif %}
+        <br><br> -->
 
 
-{% endblock %}
+        {% endblock %}
+
+    </div>
+</div>

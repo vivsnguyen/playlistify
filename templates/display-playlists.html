@@ -19,15 +19,15 @@
 
                 <div class="card-body">
                     <form class="play-playlist" id="{{ playlist.playlist_id }}"action='/play-music' method="GET">
-                        <input type="submit" value="Play this Playlist"/>
+                        <button type="submit" class="btn btn-primary"> Play this Playlist </button>
                     </form>
                     <br>
                     <div class='now-playing' id='now-playing-{{ playlist.playlist_id }}' style="display: none;"></div>
                     <br>
                     <div class='player-buttons' id="player-buttons-{{ playlist.playlist_id }}" style="display: none;">
-                        <button class="prev-button" id="prev-{{ playlist.playlist_id }}">previous track</button>
-                        <button class="pause-play-button" id="pause-play-{{ playlist.playlist_id }}">pause/play</button>
-                        <button class="next-button" id="next-{{ playlist.playlist_id }}">next track</button>
+                        <button class="prev-button btn-info" id="prev-{{ playlist.playlist_id }}">previous track</button>
+                        <button class="pause-play-button btn-info" id="pause-play-{{ playlist.playlist_id }}">pause/play</button>
+                        <button class="next-button btn-info" id="next-{{ playlist.playlist_id }}">next track</button>
                     </div>
                     {% for song in playlist.songs %}
                       <li>
@@ -40,12 +40,12 @@
                     <br>
                     <form action='/add-to-spotify-playlist' method="POST">
                         <input type='hidden' name="playlist_title" value='{{ playlist.playlist_title }}' />
-                        <input type="submit" value="Add playlist to Spotify?"/>
+                        <button type="submit" class="btn btn-primary"> Add playlist to Spotify </button>
                     </form>
                     <br>
                     <form action='/delete-playlist' method="POST">
                         <input type='hidden' name="playlist_title" value='{{ playlist.playlist_title }}' />
-                        <input type="submit" value="Delete this playlist?"/>
+                        <button type="submit" class="btn btn-primary"> Delete this playlist </button>
                     </form>
                     <br>
                     <br>

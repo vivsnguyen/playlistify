@@ -11,18 +11,13 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
     <!-- font -->
-    <link href="https://fonts.googleapis.com/css?family=Sen&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Quando&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet">
 
     <!-- my css  -->
     <link rel="stylesheet" href="/static/style.css">
 
     {% block navbar %}
-    <!-- <nav class="navbar navbar-light bg-light">
-      <a class="navbar-brand" href="/">
-        <img src="/images/logo.png" width="30" height="30" alt="">
-        Playlistify
-      </a>
-    </nav> -->
         <nav class="navbar navbar-expand-lg navbar-light">
         <a class="navbar-brand" href="/">Playlistify</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -44,7 +39,7 @@
         </nav>
     {% endblock %}
 
-  <title>{% block title %} TITLE HERE {% endblock %}</title>
+  <title>{% block title %} Playlistify {% endblock %}</title>
     {% with messages = get_flashed_messages() %}
         {% if messages %}
             {% for message in messages %}
@@ -70,7 +65,7 @@
   {% block logout %}
     {% if session.get("user_id") %}
         <form action="/logout">
-            <input type="submit" value="LOGOUT" />
+            <button type="submit" class="btn btn-warning"> LOGOUT </button>
         </form>
     {% endif %}
   {% endblock %}

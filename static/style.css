@@ -1,11 +1,102 @@
+.homepage-container {
+    text-align: center;
+}
+
+.homepage {
+    display: inline-block;
+}
+
+.login-container {
+    width: 200px;
+	height: 100px;
+
+	position: absolute;
+	top:0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+
+	margin: auto;
+}
+
 body {
-    font-family: 'Sen', sans-serif;
-    background-color: #B8B3E9;
+    font-family: 'Open Sans', sans-serif;
+    background-color: #083D77;
+    color: #EBEBD3;
+}
+
+.fullscreen-bg {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  overflow: hidden;
+  z-index: -100;
+}
+
+.fullscreen-bg__video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+@media (min-aspect-ratio: 16/9) {
+  .fullscreen-bg__video {
+    height: 300%;
+    top: -100%;
+  }
+}
+
+@media (max-aspect-ratio: 16/9) {
+  .fullscreen-bg__video {
+    width: 300%;
+    left: -100%;
+  }
+}
+
+@media (max-width: 767px) {
+  .fullscreen-bg {
+    background: url('static/images/Live-Music.jpg') center center / cover no-repeat;
+  }
+
+  .fullscreen-bg__video {
+    display: none;
+  }
 }
 
 .navbar-light {
-    background-color: #90E0F3;
+    background-color: #EE964B;
 }
+
+
+.navbar-brand {
+    font-weight: bold;
+    font-family: 'Quando', serif;
+}
+
+.card-body, .card-header {
+    color: #083D77;
+}
+
+.btn-primary {
+    background-color: #F4D35E;
+    border-color: #EE964B;
+}
+
+.btn-primary:hover {
+    background-color: #D5A021;
+    border-color: #D5A021;
+}
+
+.btn-primary:active, .btn-primary:focus {
+    color: #fff;
+    background-color: #F4D35E;
+    border-color: #F4D35E;
+}
+
 
 /* body {
   background: url(https://venngage-wordpress.s3.amazonaws.com/uploads/2018/09/Colorful-Circle-Simple-Background-Image-1.jpg) no-repeat center center;

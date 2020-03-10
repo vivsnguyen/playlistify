@@ -298,6 +298,8 @@ def play_playlist_on_web_player(user_id, playlist_title, token):
     """Play chosen playlist on web player."""
     auth_header(token)
 
+    get_new_auth_token(token)
+
     device_id = get_user_devices()
 
     track_uris = get_track_uris_from_user_playlist(user_id, playlist_title)
