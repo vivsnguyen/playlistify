@@ -115,7 +115,7 @@ def add_to_spotify_playlist():
     #check if token in session?
     token = session.get('access_token')
 
-    spotify_api.create_spotify_playlist_from_db(user_id, playlist_title, spotify_username, token)
+    spotify_api.create_spotify_playlist_from_db(user_id, playlist_title, token)
     #need to get spotify user_id, public or private?
     flash(f'Songs added successfully to {playlist_title} playlist on Spotify.')
     return redirect(f'/user-dashboard/{user_id}')

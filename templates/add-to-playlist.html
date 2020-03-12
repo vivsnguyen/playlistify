@@ -1,15 +1,27 @@
 {% extends 'base.html' %}
 {% block content %}
-{% block title %} Add to playlist {% endblock %}
+<div style="display:none;">
+{% block title %}Playlistify - editor{% endblock %}
+</div>
+<h1> Playlist editor </h1>
+<p>To create a new playlist, enter a new playlist name and an artist you want to add. </p>
+<p>To add to an existing playlist, enter the existing playlist name and an artist you want to add.</p>
 
+<div class="container">
+       <div class="row justify-content-center">
+           <div class="col-9">
 <form action = '/add-to-playlist' method="POST" id = playlist-form>
-    <label>Playlist title</label><input type="text" name = "playlist_title" id = "playlist-field" required>
+    <label>Playlist title: </label>  <input type="text" name = "playlist_title" id = "playlist-field" required>
 
-    <label>Artist name</label><input type="text" name = "artist_name" id = "artist-field">
+    <label>Artist name: </label>  <input type="text" name = "artist_name" id = "artist-field">
 
-    <input type = "submit">
+    <button class="btn btn-primary" type = "submit">Submit</button>
 
 </form>
+
+</div>
+</div>
+</div>
 
 
 {% endblock %}

@@ -33,6 +33,15 @@
                     <a class="nav-link" href="/user-dashboard/{{ session['user_id'] }}">My Dashboard</a>
                     </li>
                 {% endif %}
+                <li class="nav-item">
+                    {% block logout %}
+                      {% if session.get("user_id") %}
+                          <form action="/logout">
+                              <button type="submit" class="btn btn-warning"> LOGOUT </button>
+                          </form>
+                      {% endif %}
+                    {% endblock %}
+                </li>
             </li>
             </ul>
         </div>
@@ -61,14 +70,6 @@
 
 <body>
   {% block content %} put your content here {% endblock %}
-
-  {% block logout %}
-    {% if session.get("user_id") %}
-        <form action="/logout">
-            <button type="submit" class="btn btn-warning"> LOGOUT </button>
-        </form>
-    {% endif %}
-  {% endblock %}
 {% block scripts %}
 
 {% endblock %}

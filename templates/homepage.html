@@ -9,7 +9,11 @@
 
         <img src="static/images/logo.png">
 
-        <p>Playlistify generates a playlist from your favorite artists' setlists and top songs.</p>
+        <p>Playlistify creates playlists from your favorite artists' setlists and top songs.</p>
+        <p>Listen to your playlists here, or add them to your Spotify account and listen to them later!</p>
+        {% if not session.get("access_token") %}
+            <p>Connect your Spotify Account to get started!</p>
+        {% endif %}
 
         {% block homepage %}{% endblock %}
 
@@ -21,6 +25,12 @@
 
         {% if session.get("access_token") %}
                 <h3>Spotify account connected.</h3>
+
+                {% if session.get("user_id") %}
+                    <h5><a class="nav-link" href="/user-dashboard/{{ session['user_id'] }}">Go to your dashboard to get started!</a></h5>
+                {% endif %}
+
+
         {% else %}
 
                 <form action="/spotify-login">

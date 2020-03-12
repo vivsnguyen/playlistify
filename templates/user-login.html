@@ -1,13 +1,24 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="login-container"
-    <h3 id="sign-in-form">Sign In:</h3>
-        <form action="/log-in" method="POST">
-                <input type="email" required name="email" placeholder="Email address">
-                <input type="password" required name="password" placeholder="Password">
-            <button type="submit" class="btn btn-primary">Log In</button>
-        </form>
-    <a href="/register">New user?</a>
+<div class="container">
+       <div class="row justify-content-center">
+           <div class="col-6">
+               <h3 id="sign-in-form">Sign In:</h3>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+        <div class="row justify-content-center">
+            <div class="col-6">
+                <form action="/log-in" method="POST">
+                        <input type="email" required name="email" placeholder="Email address">
+                        <input type="password" required name="password" placeholder="Password">
+                    <button type="submit" class="btn btn-primary">Log In</button>
+                </form>
+                <a href="/register">New user?</a>
+
+            </div>
+        </div>
 </div>
 {% endblock %}
-{% block logout %}{% endblock %}
