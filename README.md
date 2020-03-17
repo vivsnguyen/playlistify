@@ -1,8 +1,9 @@
 # <img src="https://github.com/vivsnguyen/playlistify/blob/master/static/images/logo.png" width="40%" alt="Playlistify">
 
-
+Playlistify creates playlists from your favorite artists' setlists and top songs.
 
 ## Deployment
+http://54.218.47.102/
 
 ## Contents
 * [Tech Stack](#tech-stack)
