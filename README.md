@@ -2,6 +2,8 @@
 
 Playlistify creates playlists from your favorite artists' setlists and top songs.
 
+Video demo: https://youtu.be/M4T_zUoLulw
+
 ## Deployment
 http://54.218.47.102/
 
