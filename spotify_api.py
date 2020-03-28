@@ -19,7 +19,8 @@ header_info = {'Accept':'application/json',
 # Client keys
 SPOTIFY_CLIENT_ID=os.environ['SPOTIPY_CLIENT_ID']
 SPOTIFY_CLIENT_SECRET=os.environ['SPOTIPY_CLIENT_SECRET']
-SPOTIFY_REDIRECT_URI='http://localhost:5000/spotify-callback'
+# SPOTIFY_REDIRECT_URI='http://localhost:5000/spotify-callback'
+SPOTIFY_REDIRECT_URI='http://54.218.47.102/spotify-callback'
 
 # Spotify URLs
 SPOTIFY_API_BASE_URL = 'https://api.spotify.com'
@@ -296,7 +297,7 @@ def start_user_playback(track_uris, device_id):
 
 def play_playlist_on_web_player(user_id, playlist_title, token):
     """Play chosen playlist on web player."""
-    
+
     auth_header(token)
 
     device_id = get_user_devices()
