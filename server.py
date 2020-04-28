@@ -284,5 +284,5 @@ if __name__ == "__main__":
     DebugToolbarExtension(app)
     app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False #for error: AttributeError: 'Request' object has no attribute 'is_xhr'
 
-    # app.run(port=5000, host='0.0.0.0')
-    app.run()
+    app.run(port=5000, host='0.0.0.0')
+    # app.run() deployment
