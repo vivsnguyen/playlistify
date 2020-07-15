@@ -2,8 +2,6 @@
 
 Playlistify creates playlists from your favorite artists' setlists and top songs.
 
-Video demo: https://youtu.be/M4T_zUoLulw
-
 ## Deployment
 Previously deployed using AWS and Amazon LightSail.
 
