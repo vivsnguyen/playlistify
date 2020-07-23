@@ -11,7 +11,7 @@ from sqlalchemy import func
 from model import User, Artist, Song, Playlist, PlaylistSong
 from model import connect_to_db, db
 import server
-import spotipy
+# import spotipy
 
 header_info = {'Accept':'application/json',
     'Content-Type': 'application/json'}

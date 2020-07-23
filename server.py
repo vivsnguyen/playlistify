@@ -9,7 +9,7 @@ from flask_debugtoolbar import DebugToolbarExtension
 from model import User, Artist, Song, Playlist, PlaylistSong, delete_user_playlist, connect_to_db, db
 # clear_data
 
-import spotipy
+# import spotipy
 
 import setlist_api
 import spotify_api
