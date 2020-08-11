@@ -12,7 +12,11 @@ import server
 header_info = {'Accept' : 'application/json', 'x-api-key' : os.environ['SETLIST_FM_API_KEY']}
 
 def add_artist_to_db(artist_name):
-    """Adds artist to db if not already in db."""
+    """Adds artist to db if not already in db. Returns artist db object.
+    
+    >>> add_artist_to_db('boy pablo')
+    <Artist artist_name=boy pablo>
+    """
     if not Artist.query.filter_by(artist_name=artist_name).first():
         artist = Artist(artist_name=artist_name)
         db.session.add(artist)
@@ -25,7 +29,14 @@ def add_artist_to_db(artist_name):
 
 
 def load_setlists_from_artist(artist):
-    """Create a list of songs by chosen artist from a setlist."""
+    """Create a list of songs by chosen artist from a setlist.
+
+    >>> artist = add_artist_to_db('boy pablo')
+    >>> load_setlists_from_artist(artist) #doctest: +ELLIPSIS
+    [...]
+
+    """
+
     #add tourName to params that defaults to None
     url = 'https://api.setlist.fm/rest/1.0/search/setlists'
 
@@ -124,3 +135,7 @@ if __name__ == "__main__":
 
     # Import different types of data
     # load_users()
+
+    from doctest import testmod
+    if testmod().failed == 0:
+        print("Setlist API tests passed.")
