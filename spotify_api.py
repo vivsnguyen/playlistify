@@ -143,7 +143,6 @@ def get_artist_id_by_artist_name(artist_name):
     params_info = {'q': artist_name, 'type' : 'artist'}
     response = requests.get(url,params=params_info,headers=header_info).json()
 
-
     if response['artists']['items']:
         spotify_artist_id = response['artists']['items'][0]['id'] #['artists']['items'][0] gives first search result
     else:
@@ -314,3 +313,10 @@ if __name__ == "__main__":
 
     # Import different types of data
     # load_users()
+
+################################
+    #tests are failing because of user auth 
+    from doctest import testmod
+    if testmod().failed == 0:
+        # if tests pass, start server
+        app.run(debug=True)

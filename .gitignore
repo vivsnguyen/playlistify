@@ -3,3 +3,4 @@ env/
 *secrets.*
 .cache*
 *.pyc
+__pycache__git
