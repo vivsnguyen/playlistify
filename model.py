@@ -88,9 +88,9 @@ class Playlist(db.Model):
 
 
 class PlaylistSong(db.Model):
-    """Song of playlist."""
+    """Song of playlist.
 
-    """
+
     1 playlist_song has 1 playlist
     1 playlist has many playlist_songs
     """
