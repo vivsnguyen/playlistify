@@ -4,3 +4,4 @@ env/
 .cache*
 *.pyc
 __pycache__
+*.sql
