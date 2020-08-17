@@ -28,24 +28,6 @@ def index():
 
     return render_template("homepage.html")
 
-#************************************************
-#Spotify Authorization
-# @app.route('/spotify-account')
-# def spotify_account():
-#     return render_template("spotify-account.html")
-
-# @app.route('/spotify-authorize')
-# def spotify_authorize():
-#     """"""
-#     if session.get("spotify username"):
-#         del session["spotify username"]
-#
-#     username = request.args.get('username')
-#     session['spotify username'] = username
-#     spotify_api.spotify_authorization(username)
-#
-#     return redirect('/') #??????
-
 @app.route('/spotify-login')
 def spotify_login():
     """ Spotify Authorization Page """
