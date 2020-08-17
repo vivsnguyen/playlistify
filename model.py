@@ -50,59 +50,59 @@ class Artist(db.Model):
         return f"<Artist artist_name={self.artist_name}>"
 
 
-class Song(db.Model):
-    """Songs from setlists of chosen artist."""
+# class Song(db.Model):
+#     """Songs from setlists of chosen artist."""
 
-    __tablename__ = "songs"
-    __table_args__ = (db.UniqueConstraint('primary_artist', 'song_name'),)
-
-
-    song_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    song_name = db.Column(db.String(200), nullable=True)
-    primary_artist = db.Column(db.Integer, db.ForeignKey('artists.artist_id'))
-
-    artist = db.relationship("Artist", backref="songs")
-
-    def __repr__(self):
-        """Provide helpful representation when printed."""
-
-        return f"<Song song_name={self.song_name} Artist primary_artist={self.primary_artist}>"
+#     __tablename__ = "songs"
+#     __table_args__ = (db.UniqueConstraint('primary_artist', 'song_name'),)
 
 
-class Playlist(db.Model):
-    """Playlist created by user."""
+#     song_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+#     song_name = db.Column(db.String(200), nullable=True)
+#     primary_artist = db.Column(db.Integer, db.ForeignKey('artists.artist_id'))
 
-    __tablename__ = "playlists"
+#     artist = db.relationship("Artist", backref="songs")
 
-    playlist_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    playlist_title = db.Column(db.String(80), nullable=True)
+#     def __repr__(self):
+#         """Provide helpful representation when printed."""
 
-    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
-
-    songs = db.relationship("Song", secondary="playlist_songs", backref="playlists")
-
-    def __repr__(self):
-        """Provide helpful representation when printed."""
-
-        return f"<Playlist playlist_title={self.playlist_title}>"
+#         return f"<Song song_name={self.song_name} Artist primary_artist={self.primary_artist}>"
 
 
-class PlaylistSong(db.Model):
-    """Song of playlist.
+# class Playlist(db.Model):
+#     """Playlist created by user."""
+
+#     __tablename__ = "playlists"
+
+#     playlist_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+#     playlist_title = db.Column(db.String(80), nullable=True)
+
+#     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+
+#     songs = db.relationship("Song", secondary="playlist_songs", backref="playlists")
+
+#     def __repr__(self):
+#         """Provide helpful representation when printed."""
+
+#         return f"<Playlist playlist_title={self.playlist_title}>"
 
 
-    1 playlist_song has 1 playlist
-    1 playlist has many playlist_songs
-    """
+# class PlaylistSong(db.Model):
+#     """Song of playlist.
 
-    __tablename__ = 'playlist_songs'
 
-    playlist_song_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    playlist_id = db.Column(db.Integer, db.ForeignKey('playlists.playlist_id'))
-    song_id = db.Column(db.Integer, db.ForeignKey('songs.song_id'))
+#     1 playlist_song has 1 playlist
+#     1 playlist has many playlist_songs
+#     """
 
-    def __repr__(self):
-        return f"<PlaylistSong artist_id={self.artist_id} song_id={self.song_id}>"
+#     __tablename__ = 'playlist_songs'
+
+#     playlist_song_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+#     playlist_id = db.Column(db.Integer, db.ForeignKey('playlists.playlist_id'))
+#     song_id = db.Column(db.Integer, db.ForeignKey('songs.song_id'))
+
+#     def __repr__(self):
+#         return f"<PlaylistSong artist_id={self.artist_id} song_id={self.song_id}>"
 
 # def clear_data():
 #     PlaylistSong.query.delete()
@@ -116,9 +116,6 @@ def example_data():
     """Create some sample data."""
 
     # In case this is run more than once, empty out existing data
-    PlaylistSong.query.delete()
-    Playlist.query.delete()
-    Song.query.delete()
     Artist.query.delete()
     User.query.delete()
 
@@ -126,26 +123,25 @@ def example_data():
 
     artist = Artist(artist_name='boy pablo')
     user = User(name='vivivi.n', email='vivi@vivi.com', password_hash='hello')
-    playlist = Playlist(playlist_title='party time')
 
     db.session.add_all([artist, user,playlist])
     db.session.commit()
 
-def delete_user_playlist(playlist_title, user_id):
-    """Delete a user's playlist."""
+# def delete_user_playlist(playlist_title, user_id):
+#     """Delete a user's playlist."""
 
-    playlist = Playlist.query.filter_by(playlist_title = playlist_title, user_id=user_id).first()
+#     playlist = Playlist.query.filter_by(playlist_title = playlist_title, user_id=user_id).first()
 
-    db.session.delete(playlist)
-    db.session.commit()
+#     db.session.delete(playlist)
+#     db.session.commit()
 
-def delete_playlist(playlist_title, user_id):
-    user = User.query.get(user_id)
-    #get playlist obj by query playlist title
-    #check if playlist.user_id matches with session user_id else not authorized
+# def delete_playlist(playlist_title, user_id):
+#     user = User.query.get(user_id)
+#     #get playlist obj by query playlist title
+#     #check if playlist.user_id matches with session user_id else not authorized
 
-    db.session.delete(user.playlists[0])
-    db.session.commit()
+#     db.session.delete(user.playlists[0])
+#     db.session.commit()
 
 ##############################################################################
 # Helper functions
