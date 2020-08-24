@@ -19,7 +19,8 @@ header_info = {'Accept':'application/json',
 # Client keys
 SPOTIFY_CLIENT_ID=os.environ['SPOTIPY_CLIENT_ID']
 SPOTIFY_CLIENT_SECRET=os.environ['SPOTIPY_CLIENT_SECRET']
-SPOTIFY_REDIRECT_URI='http://localhost:5000/spotify-callback'
+SPOTIFY_REDIRECT_URI=os.environ['SPOTIFY_REDIRECT_URI']
+# SPOTIFY_REDIRECT_URI='http://localhost:5000/spotify-callback'
 # SPOTIFY_REDIRECT_URI='http://54.218.47.102/spotify-callback'
 
 # Spotify URLs
