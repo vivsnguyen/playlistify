@@ -128,7 +128,7 @@ def db_create_playlist(artist_name, playlist_title, user_id):
 
 
 if __name__ == "__main__":
-    connect_to_db(server.app)
+    connect_to_db(app.app)
 
     # In case tables haven't been created, create them
     db.create_all()
