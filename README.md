@@ -3,6 +3,8 @@
 Playlistify creates playlists from your favorite artists' setlists and top songs.
 
 ## Deployment
+Try it out here: http://playlist-ify.herokuapp.com/
+Currently deployed using Heroku.
 Previously deployed using AWS and Amazon LightSail.
 
 ## Contents
