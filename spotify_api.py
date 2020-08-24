@@ -10,7 +10,7 @@ from flask import request, flash, session
 from sqlalchemy import func
 from model import User, Artist, Song, Playlist, PlaylistSong
 from model import connect_to_db, db
-import app
+import server
 # import spotipy
 
 header_info = {'Accept':'application/json',
@@ -307,7 +307,7 @@ def play_playlist_on_web_player(user_id, playlist_title, token):
     start_user_playback(track_uris=track_uris, device_id=device_id)
 
 if __name__ == "__main__":
-    connect_to_db(app.app)
+    connect_to_db(server.app)
 
     # In case tables haven't been created, create them
     db.create_all()
