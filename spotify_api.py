@@ -4,6 +4,7 @@ import requests
 import json
 import sys
 import base64
+import urllib.parse
 
 from flask import request, flash, session
 
@@ -17,8 +18,8 @@ header_info = {'Accept':'application/json',
     'Content-Type': 'application/json'}
 
 # Client keys
-SPOTIFY_CLIENT_ID=os.environ.get('SPOTIPY_CLIENT_ID')
-SPOTIFY_CLIENT_SECRET=os.environ.get('SPOTIPY_CLIENT_SECRET')
+SPOTIFY_CLIENT_ID=os.environ.get('SPOTIFY_CLIENT_ID')
+SPOTIFY_CLIENT_SECRET=os.environ.get('SPOTIFY_CLIENT_SECRET')
 SPOTIFY_REDIRECT_URI=os.environ.get('SPOTIFY_REDIRECT_URI')
 # SPOTIFY_REDIRECT_URI='http://localhost:5000/spotify-callback'
 # SPOTIFY_REDIRECT_URI='http://54.218.47.102/spotify-callback'
@@ -43,10 +44,14 @@ def generate_auth_url():
     """ Returns user authorization url.
     Used in '/spotify-login' route. """
 
-    spotify_auth_url = (SPOTIFY_AUTH_URL + '?client_id=' + auth_query_param['client_id'] +
+    print("\n\n\n")
+    print(auth_query_param)
+    spotify_auth_url = (SPOTIFY_AUTH_URL +
                         '&response_type=' + auth_query_param['response_type'] +
-                        '&redirect_uri=' + auth_query_param['redirect_uri'] +
-                        '&scope=' + auth_query_param['scope'])
+                        '?client_id=' + auth_query_param['client_id'] +
+                        '&scope=' + urllib.parse.quote(auth_query_param['scope'].encode("utf-8")) +
+                        '&redirect_uri=' + auth_query_param['redirect_uri'] 
+                        )
 
     return spotify_auth_url
 
