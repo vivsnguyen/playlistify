@@ -1,0 +1,13 @@
+This file is used to test functions in setlist_api.py.
+
+First, let's import it::
+
+>>> import setlist_api
+
+Then, let's try it out::
+
+This is for load_setlists_from_artist()::
+
+    >>> artist = add_artist_to_db('boy pablo')
+    >>> load_setlists_from_artist(artist) #doctest: +ELLIPSIS
+    [...]
