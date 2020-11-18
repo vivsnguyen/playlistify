@@ -5,27 +5,49 @@ from jinja2 import StrictUndefined
 
 from flask import (Flask, render_template, redirect, request, flash, session, jsonify)
 from flask_debugtoolbar import DebugToolbarExtension
+from flask_session import Session
 
 from model import User, Artist, Song, Playlist, PlaylistSong, delete_user_playlist, connect_to_db, db
 # clear_data
 
-# import spotipy
+# ///////// SPOTIPY SAMPLE CODE
+import spotipy
+import uuid
+
+SPOTIFY_SCOPE = 'playlist-modify-private playlist-modify-public user-read-private user-read-currently-playing streaming user-read-email user-library-read user-modify-playback-state user-read-playback-state'
+
+# ///////// SPOTIPY SAMPLE CODE
 
 import setlist_api
 import spotify_api
 
 app = Flask(__name__)
+# ///////// SPOTIPY SAMPLE CODE
+app.config['SECRET_KEY'] = os.urandom(64)
+app.config['SESSION_TYPE'] = 'filesystem'
+app.config['SESSION_FILE_DIR'] = './.flask_session/'
+Session(app)
+# ///////// SPOTIPY SAMPLE CODE
 
 # Required to use Flask sessions and the debug toolbar
 app.secret_key = "ABC"
 
 app.jinja_env.undefined = StrictUndefined
 
+# ///////// SPOTIPY SAMPLE CODE
+caches_folder = './.spotify_caches/'
+if not os.path.exists(caches_folder):
+    os.makedirs(caches_folder)
+
+def session_cache_path():
+    return caches_folder + session.get('uuid')
+# ///////// SPOTIPY SAMPLE CODE
+
 
 @app.route('/')
 def index():
     """Homepage."""
-
+    
     return render_template("homepage.html")
 
 @app.route('/spotify-login')
@@ -37,7 +59,28 @@ def spotify_login():
     print('\n\n\n\n')
     print(spotify_auth_url)
 
-    return redirect(str(spotify_auth_url))
+    if not session.get('uuid'):
+        # Step 1. Visitor is unknown, give random ID
+        session['uuid'] = str(uuid.uuid4())
+
+    auth_manager = spotipy.oauth2.SpotifyOAuth(scope=SPOTIFY_SCOPE,
+                                                cache_path=session_cache_path(), 
+                                                show_dialog=True)
+
+    if request.args.get("code"):
+        # Step 3. Being redirected from Spotify auth page
+        auth_manager.get_access_token(request.args.get("code"))
+        return redirect('/')
+
+    if not auth_manager.get_cached_token():
+        # Step 2. Display sign in link when no token
+        auth_url = auth_manager.get_authorize_url()
+        return f'<h2><a href="{auth_url}">Sign in</a></h2>'
+
+    # Step 4. Signed in, display data
+    spotify = spotipy.Spotify(auth_manager=auth_manager)
+    return f'<h2>Hi {spotify.me()["display_name"]}, we are currently under maintenance! Check back again soon!'
+
 
 @app.route('/spotify-callback')
 def spotify_callback():

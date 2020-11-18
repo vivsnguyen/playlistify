@@ -1,7 +1,10 @@
 .DS_Store
-venv/
+env/
 *secrets.*
 .cache*
 *.pyc
 __pycache__
 *.sql
+
+.flask_session/
+.spotify_caches/
