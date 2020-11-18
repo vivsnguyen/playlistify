@@ -267,11 +267,9 @@ def check_authorization(user_id):
     # Get the current user's id.
     session_user_id = session.get("user_id")
 
-    # If correct user is not logged in, return False.
-    if session_user_id != user_id:
-        return False
+    # Return if correct user is logged in
 
-    return True
+    return session_user_id == user_id
 
 @app.route("/play-music")
 def play_music():

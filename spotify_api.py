@@ -207,15 +207,15 @@ def get_track_uris_from_user_playlist(user_id, playlist_title):
 
     track_uris = []
 
-    if playlist.songs:
-        for song in playlist.songs:
-            artist_name = Artist.query.get(song.primary_artist).artist_name
+    if not playlist.songs:
+        return []
 
-            track_uris.append(get_song_uri_by_song_name(song.song_name, artist_name))
+    for song in playlist.songs:
+        artist_name = Artist.query.get(song.primary_artist).artist_name
 
-    filtered_track_uris = [uri for uri in track_uris if uri != None]
+        track_uris.append(get_song_uri_by_song_name(song.song_name, artist_name))
 
-    return filtered_track_uris
+    return [uri for uri in track_uris if uri != None]
 
 def get_spotify_artist_id_from_track_uri(track_uri):
     """(helper function for adjust_length_playlist)"""
