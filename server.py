@@ -79,20 +79,10 @@ def spotify_login():
 
     # Step 4. Signed in, display data
     spotify = spotipy.Spotify(auth_manager=auth_manager)
-    return f'<h2>Hi {spotify.me()["display_name"]}, we are currently under maintenance! Check back again soon!'
-
-
-@app.route('/spotify-callback')
-def spotify_callback():
-    spotify_response_data = spotify_api.get_auth_token()
-    session['access_token'] = spotify_response_data.get('access_token')
-    session['refresh_token'] = spotify_response_data.get('refresh_token')
-
-    print(session.items())
-
-    #return render_template('display-tokens.html')
+    session['access_token'] = auth_manager.get_access_token()
+    print(session['access_token'])
+    #return f'<h2>Hi {spotify.me()["display_name"]}, we are currently under maintenance! Check back again soon!'
     return redirect('/')
-
 #************************************************
 
 @app.route('/display-playlists')

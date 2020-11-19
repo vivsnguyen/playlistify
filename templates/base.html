@@ -29,9 +29,10 @@
                     <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
-                    {% if not session.get("user_id") %}
+                    {% if not session.get("access_token") %}
                         <a class="nav-link" href="/spotify-login">Connect to Spotify<span class="sr-only">(current)</span></a>
                     {% endif %}
+                    
                 </li>
                 <li class="nav-item">
                     {% if session.get("spofify_user_id") %}

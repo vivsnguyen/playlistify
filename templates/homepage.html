@@ -12,8 +12,11 @@
         <p>Playlistify creates playlists from your favorite artists' setlists and top songs.</p>
         <p>Listen to your playlists here, or add them to your Spotify account and listen to them later!</p>
         {% if not session.get("access_token") %}
-            <p>Connect your Spotify Account to get started! **** PLAYLISTIFY IS CURRENTLY UNDERGOING MAINTENANCE ****</p>
+            <p>Connect your Spotify Account to get started!</p>
         {% endif %}
+
+        <p>**** PLAYLISTIFY IS CURRENTLY UNDERGOING MAINTENANCE ****</p>
+        <p> visit https://github.com/vivsnguyen/playlistify for updates </p>
 
         {% block homepage %}{% endblock %}
 
