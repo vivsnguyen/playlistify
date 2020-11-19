@@ -26,13 +26,18 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
-                {% if session.get("user_id") %}
-                    <a class="nav-link" href="/user-dashboard/{{ session['user_id'] }}">My Dashboard</a>
-                    </li>
-                {% endif %}
+                    {% if not session.get("user_id") %}
+                        <a class="nav-link" href="/spotify-login">Connect to Spotify<span class="sr-only">(current)</span></a>
+                    {% endif %}
+                </li>
+                <li class="nav-item">
+                    {% if session.get("spofify_user_id") %}
+                        <a class="nav-link" href="/user-dashboard/{{ session['user_id'] }}">My Dashboard</a>
+                        </li>
+                    {% endif %}
                 <li class="nav-item">
                     {% block logout %}
                       {% if session.get("user_id") %}
